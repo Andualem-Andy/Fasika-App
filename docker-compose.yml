@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13 # or mysql:8.0
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: r00t
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./fasika-backend2
+    ports:
+      - "1337:1337"
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: strapi
+      DATABASE_USERNAME: strapi_user
+      DATABASE_PASSWORD: r00t
+    volumes:
+      - ./fasika-backend2:/app
+      - /app/node_modules
+    depends_on:
+      - db
+
+  frontend:
+    build: ./fasika-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./fasika-frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  postgres-data:
