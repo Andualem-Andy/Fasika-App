@@ -1,0 +1,115 @@
+{
+  "kind": "collectionType",
+  "collectionName": "service_pages",
+  "info": {
+    "singularName": "service-page",
+    "pluralName": "service-pages",
+    "displayName": "Service Page",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "servicebgimg": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "SafeandEngaging": {
+      "type": "string"
+    },
+    "NurturingDaycare": {
+      "type": "string"
+    },
+    "DaycareService": {
+      "type": "string"
+    },
+    "DaycareServiceSubtitle": {
+      "type": "string"
+    },
+    "DaycareServicelistdown": {
+      "type": "text"
+    },
+    "titlemotto1": {
+      "type": "string"
+    },
+    "foundation": {
+      "type": "string"
+    },
+    "PreschoolCurriculum": {
+      "type": "string"
+    },
+    "PreschoolCurriculumSubtitle": {
+      "type": "string"
+    },
+    "PreschoolCurriculumlist": {
+      "type": "text"
+    },
+    "SpecialNeedsServices": {
+      "type": "string"
+    },
+    "SpecialNeedsSubtitle": {
+      "type": "string"
+    },
+    "SpecialNeedslistdown": {
+      "type": "text"
+    },
+    "NannyTrainingCenter": {
+      "type": "string"
+    },
+    "NannyTrainingSubtitle": {
+      "type": "string"
+    },
+    "NannyTraininglistdown": {
+      "type": "text"
+    },
+    "EarlyIntervention": {
+      "type": "string"
+    },
+    "EarlyInterventionSubtitle": {
+      "type": "string"
+    },
+    "EarlyInterventionlistdown": {
+      "type": "text"
+    },
+    "daycareimg": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "preschoolimg": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "specialimg": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "nannyimg": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "earlyimg": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

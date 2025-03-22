@@ -1,0 +1,75 @@
+{
+  "kind": "collectionType",
+  "collectionName": "blogs",
+  "info": {
+    "singularName": "blog",
+    "pluralName": "blogs",
+    "displayName": "Blog",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "blogbg": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "News": {
+      "type": "string"
+    },
+    "NewsDesc": {
+      "type": "text"
+    },
+    "coverBlog": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "BlogDate": {
+      "type": "date"
+    },
+    "BlogTitle": {
+      "type": "text"
+    },
+    "BlogDesc": {
+      "type": "blocks"
+    },
+    "ReadTime": {
+      "type": "string"
+    },
+    "TimeDuration": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "BlogTitle"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "blogs"
+    },
+    "galleryImages": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ],
+      "type": "media",
+      "multiple": true
+    }
+  }
+}

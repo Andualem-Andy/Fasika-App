@@ -1,0 +1,150 @@
+{
+  "kind": "collectionType",
+  "collectionName": "admission_pages",
+  "info": {
+    "singularName": "admission-page",
+    "pluralName": "admission-pages",
+    "displayName": "Admission Page",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "admissionbg": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "Enroll": {
+      "type": "string"
+    },
+    "simpleProcess": {
+      "type": "string"
+    },
+    "Registration": {
+      "type": "string"
+    },
+    "ItemRequired": {
+      "type": "string"
+    },
+    "RequiredDesc": {
+      "type": "string"
+    },
+    "BirthCert": {
+      "type": "string"
+    },
+    "ImmunizationCard": {
+      "type": "string"
+    },
+    "PassportPhoto4": {
+      "type": "string"
+    },
+    "Passportsize1": {
+      "type": "string"
+    },
+    "FAQS": {
+      "type": "string"
+    },
+    "FAQsParagraph": {
+      "type": "string"
+    },
+    "Q1": {
+      "type": "text"
+    },
+    "Q1answer": {
+      "type": "text"
+    },
+    "Q2": {
+      "type": "text"
+    },
+    "Q2answer": {
+      "type": "text"
+    },
+    "Q3": {
+      "type": "text"
+    },
+    "Q3answer": {
+      "type": "text"
+    },
+    "Q4": {
+      "type": "text"
+    },
+    "Q4answer": {
+      "type": "text"
+    },
+    "Q5": {
+      "type": "text"
+    },
+    "Q5answer": {
+      "type": "text"
+    },
+    "enrollimg": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "DownloadsPdf": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "downloadTitle": {
+      "type": "string"
+    },
+    "Q6": {
+      "type": "string"
+    },
+    "Q6answer": {
+      "type": "text"
+    },
+    "Q7": {
+      "type": "string"
+    },
+    "Q7answer": {
+      "type": "text"
+    },
+    "Q8": {
+      "type": "string"
+    },
+    "Q8answer": {
+      "type": "text"
+    },
+    "Q9": {
+      "type": "string"
+    },
+    "Q9answer": {
+      "type": "text"
+    },
+    "Q10": {
+      "type": "string"
+    },
+    "Q10answer": {
+      "type": "text"
+    },
+    "Q11": {
+      "type": "string"
+    },
+    "Q11answer": {
+      "type": "text"
+    },
+    "Q12": {
+      "type": "string"
+    },
+    "Q12answer": {
+      "type": "text"
+    }
+  }
+}

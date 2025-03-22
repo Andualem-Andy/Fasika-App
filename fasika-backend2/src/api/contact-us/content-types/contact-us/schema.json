@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contact_uses",
+  "info": {
+    "singularName": "contact-us",
+    "pluralName": "contact-uses",
+    "displayName": "Contact Us",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "contactbg": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "TrainingCenter": {
+      "type": "string"
+    },
+    "PreschoolOpen": {
+      "type": "string"
+    },
+    "whereFind": {
+      "type": "string"
+    },
+    "Location1": {
+      "type": "text"
+    },
+    "Location1Phone": {
+      "type": "text"
+    },
+    "Location2": {
+      "type": "text"
+    },
+    "Location2Phone": {
+      "type": "text"
+    },
+    "Location3": {
+      "type": "text"
+    },
+    "Location3Phone": {
+      "type": "string"
+    },
+    "DaycareOpen": {
+      "type": "string"
+    },
+    "TrainingCenterHour": {
+      "type": "text"
+    },
+    "PreschoolOpenHour": {
+      "type": "text"
+    },
+    "DaycareOpenHour": {
+      "type": "text"
+    }
+  }
+}

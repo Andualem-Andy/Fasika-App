@@ -1,0 +1,79 @@
+{
+  "kind": "collectionType",
+  "collectionName": "about_pages",
+  "info": {
+    "singularName": "about-page",
+    "pluralName": "about-pages",
+    "displayName": "About Page",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "aboutbg": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "aboutmotto": {
+      "type": "text"
+    },
+    "Genesis": {
+      "type": "string"
+    },
+    "Genesisdesc": {
+      "type": "text"
+    },
+    "Genesisimg": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "Missionvision": {
+      "type": "string"
+    },
+    "Missiondesc": {
+      "type": "text"
+    },
+    "Visiondesc": {
+      "type": "text"
+    },
+    "Valuesdesc": {
+      "type": "text"
+    },
+    "Commitment": {
+      "type": "string"
+    },
+    "HolisticGrowth": {
+      "type": "string"
+    },
+    "SpecialNeeds": {
+      "type": "string"
+    },
+    "Learningevt": {
+      "type": "string"
+    },
+    "Everychild": {
+      "type": "string"
+    },
+    "FosteringGrowth": {
+      "type": "string"
+    },
+    "HolisticGrowthdesc": {
+      "type": "blocks"
+    },
+    "SpecialNeedsdesc": {
+      "type": "blocks"
+    },
+    "Learningevtdesc": {
+      "type": "blocks"
+    }
+  }
+}

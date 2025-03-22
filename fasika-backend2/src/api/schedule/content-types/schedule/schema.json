@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "schedules",
+  "info": {
+    "singularName": "schedule",
+    "pluralName": "schedules",
+    "displayName": "Schedule",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "programme": {
+      "type": "enumeration",
+      "enum": [
+        "ft",
+        "pt"
+      ]
+    },
+    "age": {
+      "type": "integer"
+    },
+    "source": {
+      "type": "string"
+    },
+    "center": {
+      "type": "enumeration",
+      "enum": [
+        "Ayat daycare",
+        "sumit daycare",
+        "bole daycare",
+        "safari preschool",
+        "megenagna Nanny Center"
+      ]
+    },
+    "message": {
+      "type": "text"
+    },
+    "time": {
+      "type": "string"
+    }
+  }
+}
