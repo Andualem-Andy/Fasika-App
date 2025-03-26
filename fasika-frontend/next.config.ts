@@ -3,12 +3,23 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 86400, // 1 day
+    minimumCacheTTL: 3600, // 1 hour instead of 1 day
     domains: ['localhost', 'fasikachildcare.com'],
   },
-  experimental: {
-    optimizePackageImports: ['@heroicons/react']
-  }
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, must-revalidate",
+          },
+        ],
+      },
+    ];
+  },
+  
 };
 
 export default nextConfig;

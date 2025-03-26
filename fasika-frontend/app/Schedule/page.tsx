@@ -74,6 +74,7 @@ export default function ScheduleForm() {
         toast.error("Failed to submit form. Please try again.");
       }
     } catch (error) {
+      console.error("Submission error:", error);
       toast.error("An unexpected error occurred. Please try again later.");
     }
   };

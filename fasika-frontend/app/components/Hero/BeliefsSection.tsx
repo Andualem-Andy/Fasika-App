@@ -202,7 +202,7 @@ export default function BeliefsSection() {
                 </div>
 
                 <div className="relative">
-                  <div className="absolute top-4 right-4 sm:top-auto sm:bottom-6 sm:right-6 w-16 h-16 sm:w-24 sm:h-24 -translate-x-14 translate-y-[-24px]">
+                  <div className="absolute top-4 right-4 sm:top-auto sm:bottom-6 sm:right-6 w-16 h-16 sm:w-24 sm:h-24 -translate-x-14 translate-y-[-32px]">
                     <Image
                       src="/Iconfred.svg"
                       alt="Fred icon"

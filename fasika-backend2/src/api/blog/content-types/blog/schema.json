@@ -62,14 +62,28 @@
       "inversedBy": "blogs"
     },
     "galleryImages": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos",
         "audios"
+      ]
+    },
+    "authorName": {
+      "type": "string"
+    },
+    "AuthorBio": {
+      "type": "string"
+    },
+    "Authorimg": {
+      "allowedTypes": [
+        "images"
       ],
       "type": "media",
-      "multiple": true
+      "multiple": false
     }
   }
 }

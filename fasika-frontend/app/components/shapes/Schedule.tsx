@@ -140,24 +140,24 @@ export default function Schedule() {
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow container mx-auto px-4 py-8">
         <Card className="max-w-2xl mx-auto">
-          <CardHeader>
-            <div className="flex items-center gap-4 mb-4">
-              <div className="relative w-16 h-16">
-                <Image 
-                  src="/images/logo.png" 
-                  alt="Fasika Logo"
-                  fill
-                  className="rounded-lg object-contain"
-                />
-              </div>
-              <div>
-                <CardTitle className="text-2xl font-bold">Enroll With Us Today!</CardTitle>
-                <CardDescription>
-                  Use the form below to schedule a tour, register a child, or request more information.
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
+        <CardHeader>
+  <div className="flex items-center gap-4 mb-4">
+    <div className="relative w-16 h-16">
+      <Image 
+        src="/images/logo.png" 
+        alt="Fasika Logo"
+        fill
+        className="rounded-lg object-contain"
+      />
+    </div>
+    <div>
+      <CardTitle className="text-2xl font-bold">Enroll With Us Today!</CardTitle>
+      <CardDescription>
+        Use the form below to schedule a tour, register a child, or request more information.
+      </CardDescription>
+    </div>
+  </div>
+</CardHeader>
           
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -233,20 +233,21 @@ export default function Schedule() {
                 </div>
 
                 {/* Age */}
-                <div className="space-y-2">
-                  <Label htmlFor="age">Child's Age</Label>
-                  <Input
-                    id="age"
-                    type="number"
-                    placeholder="Enter age"
-                    value={formData.age}
-                    onChange={handleChange}
-                    min="0"
-                    max="18"
-                    disabled={isSubmitting}
-                  />
-                  {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
-                </div>
+<div className="space-y-2">
+  {/* eslint-disable-next-line react/no-unescaped-entities */}
+  <Label htmlFor="age">Child's Age</Label>
+  <Input
+    id="age"
+    type="number"
+    placeholder="Enter age"
+    value={formData.age}
+    onChange={handleChange}
+    min="0"
+    max="18"
+    disabled={isSubmitting}
+  />
+  {errors.age && <p className="text-red-500 text-sm">{errors.age}</p>}
+</div>
 
                 {/* Center */}
                 <div className="space-y-2">

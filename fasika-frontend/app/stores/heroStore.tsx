@@ -15,7 +15,7 @@ interface Video {
   caption: string | null;
   width: number | null;
   height: number | null;
-  formats: any | null;
+  formats: any | null; // eslint-disable-line @typescript-eslint/no-explicit-any
   hash: string;
   ext: string;
   mime: string;
@@ -23,7 +23,7 @@ interface Video {
   url: string;
   previewUrl: string | null;
   provider: string;
-  provider_metadata: any | null;
+  provider_metadata: any | null; // eslint-disable-line @typescript-eslint/no-explicit-any
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
@@ -133,8 +133,8 @@ export const useHeroStore = create<HeroStore>((set) => ({
         throw new Error('Failed to fetch hero data');
       }
 
-      const json = await res.json();
-      const heroes = json.data?.map((item: any) => ({
+      const json = await res.json() as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+      const heroes = json.data?.map((item: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
         id: item.id,
         documentId: item.documentId,
         title: item.title,
@@ -173,15 +173,15 @@ export const useHeroStore = create<HeroStore>((set) => ({
         address: item.address,
         fasikaemail: item.fasikaemail,
         FASIKAInternational: item.FASIKAInternational,
-        Testimonialsvideo1: item.Testimonialsvideo1?.map((video: any) => ({
+        Testimonialsvideo1: item.Testimonialsvideo1?.map((video: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
           id: video.id,
           url: video.url,
         })),
-        Testimonialsvideo2: item.Testimonialsvideo2?.map((video: any) => ({
+        Testimonialsvideo2: item.Testimonialsvideo2?.map((video: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
           id: video.id,
           url: video.url,
         })),
-        Testimonialsvideo3: item.Testimonialsvideo3?.map((video: any) => ({
+        Testimonialsvideo3: item.Testimonialsvideo3?.map((video: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
           id: video.id,
           url: video.url,
         })),
