@@ -6,6 +6,7 @@ const comicNeue = Comic_Neue({
   weight: ['300', '400', '700'],
   subsets: ['latin'],
   display: 'swap',
+  variable: '--font-comic-neue', // optional for CSS variables usage
 });
 
 export const metadata: Metadata = {
