@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import Fuse from "fuse.js";
 import { Send, MessageCircle, X } from "lucide-react";
 import faqData from "@/app/Chatbot/faqData"; // Ensure this path is correct
@@ -22,18 +22,18 @@ export function FAQChatbot({ botName = "Betty" }: FAQChatbotProps) {
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const chatWindowRef = useRef<HTMLDivElement>(null);
 
-  // Initialize Fuse.js with faqData
-  const fuse = new Fuse(faqData, {
+  // Memoize the Fuse instance to prevent recreating it on every render
+  const fuse = useMemo(() => new Fuse(faqData, {
     keys: [
-      { name: "question", weight: 0.7 }, // Search primarily by question
-      { name: "answer", weight: 0.3 }, // Also consider the answer for matching
+      { name: "question", weight: 0.7 },
+      { name: "answer", weight: 0.3 },
     ],
-    threshold: 0.3, // Adjust sensitivity for fuzzy matching
-    includeScore: true, // Include match scores in results
-    minMatchCharLength: 3, // Minimum characters to consider a match
-    ignoreFieldNorm: true, // Ignore the field length for more consistent matching
-    shouldSort: true, // Sort the results by relevance
-  });
+    threshold: 0.3,
+    includeScore: true,
+    minMatchCharLength: 3,
+    ignoreFieldNorm: true,
+    shouldSort: true,
+  }), []);
 
   // Scroll to the bottom of the chat window when messages update
   useEffect(() => {
@@ -43,39 +43,38 @@ export function FAQChatbot({ botName = "Betty" }: FAQChatbotProps) {
   }, [messages]);
 
   // Show a welcome message when the chat opens
-  useEffect(() => {
+  const showWelcomeMessage = useCallback(() => {
     if (isChatOpen && messages.length === 0) {
       setTimeout(() => {
         setMessages([{
           sender: "bot",
-          text: `Hi! I’m ${botName}, your assistant. How can I help you today?`,
+          text: `Hi! I'm ${botName}, your assistant. How can I help you today?`,
         }]);
       }, 500);
     }
-  }, [isChatOpen]);
+  }, [isChatOpen, messages.length, botName]);
+
+  useEffect(() => {
+    showWelcomeMessage();
+  }, [showWelcomeMessage]);
 
   // Handle sending a message
-  const handleSendMessage = () => {
-    if (!inputText.trim()) return; // Ignore empty messages
+  const handleSendMessage = useCallback(() => {
+    if (!inputText.trim()) return;
 
-    // Add the user's message to the chat
     setMessages((prev) => [...prev, { sender: "user", text: inputText }]);
     setInputText("");
     setIsBotTyping(true);
 
-    // Search faqData for a matching question
     const searchResults = fuse.search(inputText);
 
-    // Simulate a delay for bot response
     setTimeout(() => {
       if (searchResults.length > 0) {
-        // If a match is found, send the corresponding answer
         setMessages((prev) => [
           ...prev,
           { sender: "bot", text: searchResults[0].item.answer },
         ]);
       } else {
-        // If no match is found, send a fallback response
         const fallbackResponses = [
           "I'm sorry, I couldn't find an answer to that question.",
           "Could you rephrase your question?",
@@ -90,20 +89,20 @@ export function FAQChatbot({ botName = "Betty" }: FAQChatbotProps) {
         ]);
       }
       setIsBotTyping(false);
-    }, 1000); // Simulate typing delay
-  };
+    }, 1000);
+  }, [inputText, fuse]); // Added fuse to the dependency array
 
   // Handle closing the chat
-  const handleCloseChat = () => {
+  const handleCloseChat = useCallback(() => {
     setShowClearConfirm(true);
-  };
+  }, []);
 
   // Handle clearing the chat
-  const handleClearChat = () => {
+  const handleClearChat = useCallback(() => {
     setMessages([]);
     setIsChatOpen(false);
     setShowClearConfirm(false);
-  };
+  }, []);
 
   return (
     <div className="fixed bottom-4 right-4 z-50">

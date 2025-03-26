@@ -16,6 +16,7 @@ import { useNavbarStore } from '@/app/stores/navbarStore';
 export default function Navbar() {
   const { data, loading, fetchNavbar } = useNavbarStore();
   const pathname = usePathname();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337';
 
   useEffect(() => {
     fetchNavbar();
@@ -24,19 +25,20 @@ export default function Navbar() {
   if (loading) return null;
 
   return (
-    <header className="bg-green-900 md:bg-white shadow-sm sticky top-0 z-50 border-none h-16">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-full">
+    <header className="bg-green-900 md:bg-white shadow-sm sticky top-0 z-50 border-none h-16 w-screen overflow-x-hidden">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-full w-full">
         {/* Logo Section - Left */}
         <div className="flex items-center h-full">
           <a href={data?.logoLink?.href || '/'} className="flex items-center space-x-2 h-full">
             {data?.logoLink?.image?.url && (
               <Image
-                src={`http://localhost:1337${data.logoLink.image.url}`}
+                src={`${apiUrl}${data.logoLink.image.url}`}
                 alt={data.logoLink.image.alternativeText || 'Logo'}
-                width={900}
-                height={500}
-                className="h-12 sm:h-12 w-auto max-w-xs sm:max-w-sm" // Prevents shrinking
-                loading="lazy"
+                width={180}  // Adjusted for better performance
+                height={80}   // Adjusted for better performance
+                className="h-12 sm:h-12 w-auto object-contain" // Using object-contain
+                priority={true} // Only for above-the-fold images
+                quality={80}   // Optimized quality
               />
             )}
             <span className="text-lg sm:text-xl font-bold text-white md:text-green-800 hover:text-green-200 transition-colors">
@@ -45,11 +47,11 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Tablet Navigation & CTA (768px and 820px) */}
+        {/* Tablet Navigation & CTA */}
         <div className="hidden sm:flex lg:hidden items-center w-full justify-start ml-16 h-full">
           <nav className="flex space-x-4 justify-start w-full overflow-x-auto h-full">
             {data?.link
-              ?.filter((link) => link.text !== 'Contact Us') // Remove "Contact Us" for tablet
+              ?.filter((link) => link.text !== 'Contact Us')
               .map((link) => (
                 <a
                   key={link.id}
@@ -57,9 +59,7 @@ export default function Navbar() {
                   target={link.external ? '_blank' : '_self'}
                   rel={link.external ? 'noopener noreferrer' : ''}
                   className={`text-gray-700 hover:text-green-800 transition-colors relative group whitespace-nowrap h-full flex items-center ${
-                    pathname === link.href
-                      ? 'before:absolute before:bg-yellow-400 before:w-[74px] before:h-[calc(100%+2rem)] before:bottom-0 before:left-1/2 before:-translate-x-1/2 before:border-b-2 before:border-b-green-800 before:rounded-br-[20px] before:rounded-bl-[20px] before:z-[-1]'
-                      : ''
+                    pathname === link.href ? 'active-nav-item' : ''
                   }`}
                 >
                   {link.text}
@@ -68,7 +68,6 @@ export default function Navbar() {
               ))}
           </nav>
 
-          {/* Adjust CTA Button Size and Spacing */}
           {data?.cta && (
             <Button
               asChild
@@ -96,9 +95,7 @@ export default function Navbar() {
                 target={link.external ? '_blank' : '_self'}
                 rel={link.external ? 'noopener noreferrer' : ''}
                 className={`text-base font-bold text-gray-700 hover:text-green-800 transition-colors relative group whitespace-nowrap h-full flex items-center ${
-                  pathname === link.href
-                    ? 'before:absolute before:bg-[#F5DE19] before:w-[74px] before:h-[calc(100%+2rem)] before:bottom-0 before:left-1/2 before:-translate-x-1/2 before:border-b-2 before:border-b-green-800 before:rounded-br-[20px] before:rounded-bl-[20px] before:z-[-1]'
-                    : ''
+                  pathname === link.href ? 'active-nav-item' : ''
                 }`}
               >
                 {link.text}
@@ -111,7 +108,7 @@ export default function Navbar() {
             <Button
               asChild
               variant="default"
-              className="text-base font-bold bg-green-800 hover:bg-green-700 text-yellow-100 border-none rounded-lg  transition-all shadow-md hover:shadow-lg px-6 py-3 min-w-fit text-lg"
+              className="text-base font-bold bg-green-800 hover:bg-green-700 text-yellow-100 border-none rounded-lg transition-all shadow-md hover:shadow-lg px-6 py-3 min-w-fit text-lg"
             >
               <a
                 href={data.cta.href}
@@ -124,7 +121,7 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile Menu (Dropdown) - Right side */}
+        {/* Mobile Menu (Dropdown) */}
         <div className="sm:hidden h-full">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -170,6 +167,26 @@ export default function Navbar() {
           </DropdownMenu>
         </div>
       </div>
+
+      <style jsx global>{`
+        .active-nav-item::before {
+          content: '';
+          position: absolute;
+          background: #F5DE19;
+          width: 74px;
+          height: calc(100% + 2rem);
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          border-bottom: 2px solid #065F46;
+          border-radius: 0 0 20px 20px;
+          z-index: -1;
+        }
+        html, body {
+          overflow-x: hidden;
+          width: 100%;
+        }
+      `}</style>
     </header>
   );
 }

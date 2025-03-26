@@ -64,7 +64,7 @@ export default function HeroPage() {
             <div className="relative z-10 w-full flex justify-center lg:justify-end right-[-10%]">
               {hero.image?.url ? (
                 <HeroImage
-                  src={`http://localhost:1337${hero.image.url}`}
+                  src={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${hero.image.url}`}
                   alt={hero.title}
                   className="w-full max-w-md lg:max-w-lg"
                 />

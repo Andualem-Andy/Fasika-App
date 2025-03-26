@@ -3,31 +3,50 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import PageLayout from "@/app/components/PageLayout/PageLayout";
 import Footer from "@/app/components/footer/footer";
+import BlogCard from "@/app/components/shapes/BlogCard";
 import { BlogData, ImageData } from "@/app/stores/blogStore";
 import { PageSkeleton } from "@/app/components/skeletons/page-skeleton";
+import { FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
+import { FiCopy } from 'react-icons/fi';
+import { FaX } from 'react-icons/fa6';
 
 // Type definitions
-type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+type HeadingTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
-interface BlogDescChild {
-  type: string;
-  text: string;
-  bold?: boolean;
-  italic?: boolean;
+
+
+interface Author {
+  name: string;
+  bio?: string;
+  avatarUrl: string;
 }
 
-interface BlogDescHeading {
-  type: "heading";
-  level: number;
-  children: BlogDescChild[];
-}
+// Helper function to safely get image URLs
+const getBestImageUrl = (image: ImageData): string => {
+  const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL || '';
+  
+  if (image.formats?.large?.url) return `${baseUrl}${image.formats.large.url}`;
+  if (image.formats?.medium?.url) return `${baseUrl}${image.formats.medium.url}`;
+  if (image.formats?.small?.url) return `${baseUrl}${image.formats.small.url}`;
+  if (image.url) return `${baseUrl}${image.url}`;
+  
+  return '/default-blog-image.jpg';
+};
 
-interface BlogDescParagraph {
-  type: "paragraph";
-  children: BlogDescChild[];
-}
+// Helper function to get author data
+const getAuthorData = (blog: BlogData): Author => {
+  const authorImage = blog.Authorimg || blog.Authorimg;
+  return {
+    name: blog.authorName || "Unknown Author",
+    bio: blog.AuthorBio,
+    avatarUrl: authorImage?.url
+      ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${authorImage.url}`
+      : '/default-avatar.jpg'
+  };
+};
 
 export default function BlogDetailPage() {
   const params = useParams();
@@ -35,40 +54,38 @@ export default function BlogDetailPage() {
   const [blog, setBlog] = useState<BlogData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [bgImageUrl, setBgImageUrl] = useState<string>("");
+  const [bgImageUrl, setBgImageUrl] = useState<string>("/default-bg.jpg");
+  const [relatedPosts, setRelatedPosts] = useState<BlogData[]>([]);
 
   useEffect(() => {
     const fetchBlog = async () => {
       try {
         const response = await fetch(
-          `http://localhost:1337/api/blogs?filters[slug][$eq]=${slug}&populate=*`
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/blogs?filters[slug][$eq]=${slug}&populate=*`
         );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const result = await response.json();
-        console.log("API Response:", result); // Log the API response
-
-        if (!result.data || result.data.length === 0) {
-          throw new Error("Blog not found");
-        }
+        if (!result.data || result.data.length === 0) throw new Error("Blog not found");
 
         const blogData = result.data[0];
         setBlog(blogData);
 
         if (blogData.blogbg?.formats?.large?.url) {
-          setBgImageUrl(
-            `http://localhost:1337${blogData.blogbg.formats.large.url}`
-          );
+          setBgImageUrl(`${process.env.NEXT_PUBLIC_STRAPI_URL}${blogData.blogbg.formats.large.url}`);
+        }
+
+        const relatedResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/blogs?filters[slug][$ne]=${slug}&pagination[limit]=3&populate=*&sort=createdAt:desc`
+        );
+        if (relatedResponse.ok) {
+          const relatedResult = await relatedResponse.json();
+          setRelatedPosts(relatedResult.data || []);
         }
 
         setLoading(false);
       } catch (error) {
-        setError(
-          error instanceof Error ? error.message : "An unknown error occurred"
-        );
+        setError(error instanceof Error ? error.message : "An unknown error occurred");
         setLoading(false);
       }
     };
@@ -76,106 +93,100 @@ export default function BlogDetailPage() {
     fetchBlog();
   }, [slug]);
 
-  if (loading) {
-    return <div className="text-center p-8"><PageSkeleton /></div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500 p-8">Error: {error}</div>;
-  }
-
-  if (!blog) {
-    return <div className="p-8">Blog post not found</div>;
-  }
-
-  // Social Sharing Buttons
-  const SocialSharingButtons = ({ title, url }: { title: string, url: string }) => {
+  // Social Sharing Buttons Component with X
+  const SocialSharingButtons = ({ title, url }: { title: string; url: string }) => {
     const shareUrl = encodeURIComponent(url);
     const shareText = encodeURIComponent(title);
+    const [copied, setCopied] = useState(false);
+
+    const handleCopyLink = () => {
+      navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    };
 
     return (
-      <div className="flex space-x-4 mt-8">
-        <a
-          href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-500 hover:text-[#1DA1F2]"
-        >
-          <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M22.23 5.924c-.806.358-1.67.6-2.577.708a4.515 4.515 0 001.98-2.49 9.037 9.037 0 01-2.86 1.09 4.507 4.507 0 00-7.677 4.11 12.8 12.8 0 01-9.29-4.71 4.507 4.507 0 001.394 6.015 4.48 4.48 0 01-2.04-.563v.057a4.507 4.507 0 003.616 4.415 4.52 4.52 0 01-2.034.077 4.507 4.507 0 004.21 3.13 9.038 9.038 0 01-5.6 1.93c-.364 0-.724-.021-1.08-.063a12.78 12.78 0 006.92 2.03c8.3 0 12.84-6.88 12.84-12.84 0-.195-.004-.39-.013-.584a9.172 9.172 0 002.26-2.34z" />
-          </svg>
-        </a>
-        <a
-          href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-500 hover:text-[#1877F2]"
-        >
-          <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z" />
-          </svg>
-        </a>
-        <a
-          href={`https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}&title=${shareText}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-500 hover:text-[#0077B5]"
-        >
-          <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.44-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43c-1.15 0-2.08-.94-2.08-2.08 0-1.15.94-2.08 2.08-2.08 1.15 0 2.08.94 2.08 2.08 0 1.15-.94 2.08-2.08 2.08zM7.13 20.45H3.56V9h3.57v11.45zM22.23 0H1.77C.8 0 0 .8 0 1.77v20.46C0 23.2.8 24 1.77 24h20.46c.97 0 1.77-.8 1.77-1.77V1.77C24 .8 23.2 0 22.23 0z" />
-          </svg>
-        </a>
+      <div className="mt-8">
+        <h3 className="text-lg font-medium text-gray-700 mb-4">Share this article</h3>
+        <div className="flex space-x-4">
+          {/* X (formerly Twitter) */}
+          <a
+            href={`https://x.com/intent/tweet?url=${shareUrl}&text=${shareText}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-black text-white p-3 rounded-full hover:bg-gray-800 transition-colors"
+            aria-label="Share on X"
+          >
+            <FaX size={18} />
+          </a>
+
+          {/* Facebook */}
+          <a
+            href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#1877F2] text-white p-3 rounded-full hover:bg-[#166fe5] transition-colors"
+            aria-label="Share on Facebook"
+          >
+            <FaFacebookF size={18} />
+          </a>
+
+          {/* LinkedIn */}
+          <a
+            href={`https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}&title=${shareText}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#0077B5] text-white p-3 rounded-full hover:bg-[#006097] transition-colors"
+            aria-label="Share on LinkedIn"
+          >
+            <FaLinkedinIn size={18} />
+          </a>
+
+          {/* Copy Link */}
+          <button
+            onClick={handleCopyLink}
+            className="bg-gray-200 text-gray-700 p-3 rounded-full hover:bg-gray-300 transition-colors relative"
+            aria-label="Copy link"
+          >
+            <FiCopy size={18} />
+            {copied && (
+              <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                Copied!
+              </span>
+            )}
+          </button>
+        </div>
       </div>
     );
   };
 
-  // Author Bio
-  const AuthorBio = ({ author }: { author: any }) => {
-    return (
-      <div className="mt-12 border-t pt-8">
-        <div className="flex items-center space-x-4">
+  // Author Bio Component
+  const AuthorBio = ({ author }: { author: Author }) => (
+    <div className="mt-12 border-t pt-8">
+      <div className="flex items-center space-x-4">
+        <div className="relative w-16 h-16 rounded-full overflow-hidden">
           <Image
             src={author.avatarUrl}
             alt={author.name}
-            width={64}
-            height={64}
-            className="rounded-full"
+            fill
+            className="object-cover"
+            sizes="64px"
           />
-          <div>
-            <h3 className="text-xl font-semibold">{author.name}</h3>
-            <p className="text-gray-600">{author.bio}</p>
-          </div>
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold">{author.name}</h3>
+          {author.bio && <p className="text-gray-600">{author.bio}</p>}
         </div>
       </div>
-    );
-  };
+    </div>
+  );
 
-  // Related Posts
-  const RelatedPosts = ({ posts }: { posts: any[] }) => {
-    return (
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold mb-6">Related Posts</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post, index) => (
-            <div key={index} className="border rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <Image
-                src={post.imageUrl}
-                alt={post.title}
-                width={400}
-                height={250}
-                className="object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-                <p className="text-gray-600">{post.excerpt}</p>
-                <a href={post.url} className="text-[#073F27] hover:text-[#073F27]/80 mt-4 inline-block">Read More</a>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
+  if (loading) return <div className="text-center p-8"><PageSkeleton /></div>;
+  if (error) return <div className="text-red-500 p-8">Error: {error}</div>;
+  if (!blog) return <div className="p-8">Blog post not found</div>;
+
+  const author = getAuthorData(blog);
+  const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
 
   return (
     <PageLayout
@@ -194,8 +205,8 @@ export default function BlogDetailPage() {
               className="relative aspect-video rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
               <Image
-                src={`http://localhost:1337${image.formats.large.url}`}
-                alt={image.alternativeText || blog.BlogTitle}
+                src={getBestImageUrl(image)}
+                alt={image.alternativeText || blog.BlogTitle || 'Blog image'}
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -219,103 +230,82 @@ export default function BlogDetailPage() {
         {/* Blog Content */}
         <article className="prose prose-lg lg:prose-xl dark:prose-invert max-w-none">
           {blog.BlogDesc.map((item, index) => {
-            // Render headings
             if (item.type === "heading") {
               const safeLevel = Math.min(Math.max(item.level, 1), 6);
               const HeadingTag = `h${safeLevel}` as HeadingTag;
-
               return (
                 <HeadingTag
                   key={index}
                   id={`heading-${index}`}
                   className={`text-[#073F27] mb-6 border-b pb-2 border-gray-200/60 ${
-                    safeLevel === 1 ? "text-4xl font-bold" : 
-                    safeLevel === 2 ? "text-3xl font-bold" : 
-                    safeLevel === 3 ? "text-2xl font-bold" : 
-                    safeLevel === 4 ? "text-xl font-bold" : 
-                    safeLevel === 5 ? "text-lg font-bold" : 
-                    "text-base font-bold"
+                    safeLevel === 1 ? "text-4xl font-bold" :
+                    safeLevel === 2 ? "text-3xl font-bold" :
+                    safeLevel === 3 ? "text-2xl font-bold" :
+                    safeLevel === 4 ? "text-xl font-bold" :
+                    safeLevel === 5 ? "text-lg font-bold" : "text-base font-bold"
                   }`}
                 >
-                  {item.children.map((child, childIndex) => {
-                    let className = "";
-                    if (child.bold) {
-                      className += "font-bold ";
-                    }
-                    if (child.italic) {
-                      className += "italic ";
-                    }
-                    return (
-                      <span key={childIndex} className={className.trim()}>
-                        {child.text}
-                      </span>
-                    );
-                  })}
+                  {item.children.map((child, childIndex) => (
+                    <span 
+                      key={childIndex} 
+                      className={`${child.bold ? "font-bold" : ""} ${child.italic ? "italic" : ""}`}
+                    >
+                      {child.text}
+                    </span>
+                  ))}
                 </HeadingTag>
               );
             }
 
-            // Render paragraphs
             if (item.type === "paragraph") {
               return (
                 <div key={index} className="mb-8">
                   <p className="text-gray-700 leading-relaxed text-lg mb-6">
-                    {item.children.map((child, childIndex) => {
-                      let className = "hover:text-[#073F27]/90 transition-colors";
-                      if (child.bold) {
-                        className += " font-bold";
-                      }
-                      if (child.italic) {
-                        className += " italic";
-                      }
-                      return (
-                        <span key={childIndex} className={className}>
-                          {child.text}
-                        </span>
-                      );
-                    })}
+                    {item.children.map((child, childIndex) => (
+                      <span 
+                        key={childIndex} 
+                        className={`hover:text-[#073F27]/90 transition-colors ${child.bold ? "font-bold" : ""} ${child.italic ? "italic" : ""}`}
+                      >
+                        {child.text}
+                      </span>
+                    ))}
                   </p>
-                  {index % 3 === 0 && (
-                    <div className="w-full h-px bg-gray-200/50 my-8"></div>
-                  )}
+                  {index % 3 === 0 && <div className="w-full h-px bg-gray-200/50 my-8"></div>}
                 </div>
               );
             }
-
-            // Handle unknown types
             return null;
           })}
         </article>
 
-        {/* Social Sharing Buttons */}
-        <SocialSharingButtons title={blog.BlogTitle} url={window.location.href} />
-
-        {/* Author Bio */}
-        <AuthorBio author={{
-          name: "John Doe",
-          bio: "John is a passionate writer and developer with over 10 years of experience in the tech industry.",
-          avatarUrl: "/images/author-avatar.jpg", // Replace with your local image path
-        }} />
+        {/* Social Sharing and Author */}
+        <SocialSharingButtons title={blog.BlogTitle} url={currentUrl} />
+        <AuthorBio author={author} />
 
         {/* Related Posts */}
-        <RelatedPosts posts={[
-          {
-            title: "How to Build a Modern Blog",
-            excerpt: "Learn how to create a modern blog with Next.js and Tailwind CSS.",
-            imageUrl: "/images/blog-1.jpg", // Replace with your local image path
-            url: "/blog/how-to-build-a-modern-blog",
-          },
-          {
-            title: "Advanced React Techniques",
-            excerpt: "Explore advanced React techniques to improve your development skills.",
-            imageUrl: "/images/blog-2.jpg", // Replace with your local image path
-            url: "/blog/advanced-react-techniques",
-          },
-        ]} />
+        {relatedPosts.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold mb-6">Related Posts</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {relatedPosts.map((post) => (
+                <BlogCard
+                  key={post.id}
+                  BlogDate={post.BlogDate}
+                  BlogTitle={post.BlogTitle}
+                  BlogDesc={post.BlogDesc[0]?.children[0]?.text || "No description available"}
+                  ReadTime={post.ReadTime || "Unknown"}
+                  TimeDuration={post.TimeDuration || "Unknown"}
+                  slug={post.slug}
+                  coverBlog={post.coverBlog}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Back Button */}
         <div className="mt-12">
-          <a
+          <Link
             href="/blog"
             className="inline-flex items-center text-[#073F27] hover:text-[#073F27]/80 transition-colors"
           >
@@ -332,7 +322,7 @@ export default function BlogDetailPage() {
               />
             </svg>
             Back to All Articles
-          </a>
+          </Link>
         </div>
       </div>
 

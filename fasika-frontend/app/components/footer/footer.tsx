@@ -18,10 +18,9 @@ export default function Footer() {
   const hero = heroes.length > 0 ? heroes[0] : null;
   if (!hero) return <PageSkeleton />;
 
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="mt-auto">
+    <footer className="mt-auto relative">
+      {/* Back to top link with icon inside */}
       {/* Top Section */}
       <div className="bg-[#1A472A] text-white py-8 px-4 md:px-6 lg:px-8">
         <div className="container mx-auto flex flex-col md:flex-row justify-center gap-16 md:gap-32 text-center md:text-left">
@@ -30,6 +29,11 @@ export default function Footer() {
           <div className="mb-6 md:mb-0">
             <h4 className="text-lg font-semibold mb-4 text-yellow-400">{hero.CompanyInfo}</h4>
             <ul className="space-y-2">
+              <li>
+                <Link href="/" className="hover:text-green-300 transition-colors">
+                  Home
+                </Link>
+              </li>
               <li>
                 <Link href="/about" className="hover:text-green-300 transition-colors">
                   About Us
@@ -47,7 +51,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/blog" className="hover:text-green-300 transition-colors">
-                  Blog
+                  News & Update
                 </Link>
               </li>
             </ul>
@@ -57,7 +61,7 @@ export default function Footer() {
           <div className="mb-6 md:mb-0">
             <h4 className="text-lg font-semibold mb-4 text-yellow-400">{hero.GetInTouch}</h4>
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center md:justify-start gap-2">
                 <Phone className="h-5 w-5 text-yellow-400" />
                 <div className="flex gap-4">
                   <Link href={`tel:${hero.Phone1}`} className="hover:text-green-300">
@@ -68,11 +72,11 @@ export default function Footer() {
                   </Link>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center md:justify-start gap-2">
                 <MapPin className="h-5 w-5 text-yellow-400" />
                 <span>{hero.address}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center md:justify-start gap-2">
                 <Mail className="h-5 w-5 text-yellow-400" />
                 <Link href={`mailto:${hero.fasikaemail}`} className="hover:text-green-300">
                   {hero.fasikaemail}
@@ -85,66 +89,70 @@ export default function Footer() {
 
       {/* Bottom Section */}
       <div className="bg-black text-white py-4 px-4 md:px-6 lg:px-8">
-  <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-    {/* Copyright - Centered on mobile, slightly right on desktop */}
-    <div className="text-sm md:ml-8 text-center md:text-left">
-      © {new Date().getFullYear()} {hero.FASIKAInternational}. All rights reserved
-    </div>
-    
-    {/* Social Icons - Always right-aligned */}
-    <div className="flex gap-6">
-      {/* Facebook */}
-      {hero.Icon?.[0]?.href && (
-        <Link 
-          href={hero.Icon[0].href.startsWith('http') ? hero.Icon[0].href : `https://${hero.Icon[0].href}`} 
-          target="_blank" 
-          className="text-yellow-400 hover:text-green-300"
-        >
-          <Facebook className="h-6 w-6" />
-        </Link>
-      )}
+        <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          {/* Copyright */}
+          <div className="text-sm md:ml-8 text-center md:text-left">
+            © {new Date().getFullYear()} {hero.FASIKAInternational}. All rights reserved
+          </div>
+          
+          {/* Social Icons */}
+          <div className="flex gap-6">
+            {/* Facebook */}
+            {hero.Icon?.[0]?.href && (
+              <Link 
+                href={hero.Icon[0].href.startsWith('http') ? hero.Icon[0].href : `https://${hero.Icon[0].href}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-yellow-400 hover:text-green-300"
+              >
+                <Facebook className="h-6 w-6" />
+              </Link>
+            )}
 
-      {/* TikTok */}
-      {hero.Icon2?.[0]?.href && (
-        <Link 
-          href={hero.Icon2[0].href.startsWith('http') ? hero.Icon2[0].href : `https://${hero.Icon2[0].href}`} 
-          target="_blank" 
-          className="text-yellow-400 hover:text-green-300"
-        >
-          <svg 
-            className="h-6 w-6" 
-            viewBox="0 0 24 24" 
-            fill="currentColor"
-          >
-            <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.255a6.723 6.723 0 0 0 4.5 1.726v-3.5a4.061 4.061 0 0 1-1.094-.171Z"/>
-          </svg>
-        </Link>
-      )}
+            {/* TikTok */}
+            {hero.Icon2?.[0]?.href && (
+              <Link 
+                href={hero.Icon2[0].href.startsWith('http') ? hero.Icon2[0].href : `https://${hero.Icon2[0].href}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-yellow-400 hover:text-green-300"
+              >
+                <svg 
+                  className="h-6 w-6" 
+                  viewBox="0 0 24 24" 
+                  fill="currentColor"
+                >
+                  <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.255a6.723 6.723 0 0 0 4.5 1.726v-3.5a4.061 4.061 0 0 1-1.094-.171Z"/>
+                </svg>
+              </Link>
+            )}
 
-      {/* Instagram */}
-      {hero.Icon3?.[0]?.href && (
-        <Link 
-          href={hero.Icon3[0].href.startsWith('http') ? hero.Icon3[0].href : `https://${hero.Icon3[0].href}`} 
-          target="_blank" 
-          className="text-yellow-400 hover:text-green-300"
-        >
-          <Instagram className="h-6 w-6" />
-        </Link>
-      )}
+            {/* Instagram */}
+            {hero.Icon3?.[0]?.href && (
+              <Link 
+                href={hero.Icon3[0].href.startsWith('http') ? hero.Icon3[0].href : `https://${hero.Icon3[0].href}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-yellow-400 hover:text-green-300"
+              >
+                <Instagram className="h-6 w-6" />
+              </Link>
+            )}
 
-      {/* LinkedIn */}
-      {hero.Icon4?.[0]?.href && (
-        <Link 
-          href={hero.Icon4[0].href.startsWith('http') ? hero.Icon4[0].href : `https://${hero.Icon4[0].href}`} 
-          target="_blank" 
-          className="text-yellow-400 hover:text-green-300"
-        >
-          <Linkedin className="h-6 w-6" />
-        </Link>
-      )}
-    </div>
-  </div>
-</div>
+            {/* LinkedIn */}
+            {hero.Icon4?.[0]?.href && (
+              <Link 
+                href={hero.Icon4[0].href.startsWith('http') ? hero.Icon4[0].href : `https://${hero.Icon4[0].href}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-yellow-400 hover:text-green-300"
+              >
+                <Linkedin className="h-6 w-6" />
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
     </footer>
   );
 }

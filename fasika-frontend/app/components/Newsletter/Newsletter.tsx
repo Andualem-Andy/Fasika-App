@@ -6,20 +6,12 @@ import { useSubscriptionStore } from "@/app/stores/subscriptionStore";
 import { PageSkeleton } from "@/app/components/skeletons/page-skeleton";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
-// Define the shape of the result object
 interface SubscriptionResult {
   error?: string;
   success?: boolean;
 }
 
-// NewsletterForm Component
-const NewsletterForm = ({
-  isSubscribed,
-  email,
-}: {
-  isSubscribed: boolean;
-  email: string;
-}) => {
+const NewsletterForm = ({ email }: { email: string }) => {
   const {
     error: subscriptionError,
     isLoading,
@@ -29,44 +21,33 @@ const NewsletterForm = ({
   } = useSubscriptionStore();
   const [showSuccessCard, setShowSuccessCard] = useState(false);
 
-  // Handle form submission
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      // Prepare the payload
-      const payload = {
-        data: {
-          email: email,
-        },
-      };
-      console.log('Payload:', payload);
-
-      // Call the subscribe function
       try {
-        const result = await subscribe() as unknown as SubscriptionResult; // Cast the result to SubscriptionResult
+        const result = await subscribe() as unknown as SubscriptionResult;
 
         if (result?.error) {
-          if (result.error === 'This attribute must be unique') {
-            reset(); // Reset the form state
-            alert('This email is already subscribed.'); // Show a user-friendly message
+          if (result.error.includes('unique')) {
+            reset();
+            alert('This email is already subscribed.');
           } else {
-            alert(result.error); // Show other errors
+            alert(result.error);
           }
         } else {
-          // Show the success card and hide it after 5 seconds
           setShowSuccessCard(true);
           setTimeout(() => {
             setShowSuccessCard(false);
-            setEmail(''); // Reset the email field
-          }, 5000); // 5 seconds
+            setEmail('');
+          }, 5000);
         }
       } catch (error) {
         console.error('Subscription failed:', error);
         alert('Subscription failed. Please try again.');
       }
     },
-    [subscribe, setEmail, reset, email]
+    [subscribe, setEmail, reset] // Removed 'email' from dependencies
   );
 
   return (
@@ -116,14 +97,13 @@ const NewsletterForm = ({
         )}
       </form>
 
-      {/* Success Card */}
       {showSuccessCard && (
         <div className="mt-6">
           <Card className="max-w-md mx-auto">
             <CardHeader>
               <CardTitle>Success!</CardTitle>
               <CardDescription>
-                You'll receive updates on <strong>{email}</strong>.
+                You&apos;ll receive updates on <strong>{email}</strong>.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -138,20 +118,18 @@ const NewsletterForm = ({
   );
 };
 
-// NewsletterSection Component
 export default function NewsletterSection() {
   const { heroes, loading, error, fetchHeroes } = useHeroStore();
-  const { email, isSubscribed } = useSubscriptionStore(); // Destructure email and isSubscribed
+  const { email } = useSubscriptionStore();
 
   React.useEffect(() => {
     fetchHeroes();
   }, [fetchHeroes]);
 
   if (loading) return <PageSkeleton />;
-  if (error)
-    return <div className="text-center py-10 text-red-500">Error: {error}</div>;
+  if (error) return <div className="text-center py-10 text-red-500">Error: {error}</div>;
 
-  const hero = heroes.length > 0 ? heroes[0] : null;
+  const hero = heroes[0];
   if (!hero) return <PageSkeleton />;
 
   return (
@@ -171,8 +149,7 @@ export default function NewsletterSection() {
           </p>
         </div>
 
-        {/* Render the NewsletterForm without reCAPTCHA */}
-        <NewsletterForm isSubscribed={isSubscribed} email={email} />
+        <NewsletterForm email={email} />
       </div>
     </div>
   );

@@ -2,7 +2,8 @@
 
 import React, { useEffect } from "react";
 import { useHeroStore } from "@/app/stores/heroStore";
-import { Card, CardHeader, CardFooter } from "@/components/ui/card"; 
+import { Card, CardHeader } from "@/components/ui/card"; 
+import Image from "next/image";
 import Circle from "@/app/components/shapes/Circle";
 import Oval from "@/app/components/shapes/Oval";
 import { PageSkeleton } from "@/app/components/skeletons/page-skeleton";
@@ -47,7 +48,13 @@ export default function HeroProgram() {
           <Card className="bg-gray-50 shadow rounded-2xl w-full max-w-[328px] h-[288px] flex flex-col justify-between items-center p-0">
             <CardHeader className="text-center p-4">
               <div className="flex flex-col items-center">
-                <img src="/Daycare.svg" alt="Daycare" className="h-16 w-16 mb-2" />
+                <Image 
+                  src="/Daycare.svg" 
+                  alt="Daycare" 
+                  width={64}
+                  height={64}
+                  className="h-16 w-16 mb-2"
+                />
                 <h3 className="mt-2 text-xl font-semibold mb-2">Daycare Services</h3>
                 <div className="w-16 h-1 bg-yellow-500 mx-auto mb-2"></div>
                 <p className="text-base text-gray-600">
@@ -61,7 +68,13 @@ export default function HeroProgram() {
           <Card className="bg-gray-50 shadow rounded-2xl w-full max-w-[328px] h-[288px] flex flex-col justify-between items-center p-0">
             <CardHeader className="text-center p-4">
               <div className="flex flex-col items-center">
-                <img src="/Preschool.svg" alt="Preschool" className="h-16 w-16 mb-2" />
+                <Image 
+                  src="/Preschool.svg" 
+                  alt="Preschool" 
+                  width={64}
+                  height={64}
+                  className="h-16 w-16 mb-2"
+                />
                 <h3 className="mt-2 text-xl font-semibold mb-2">Preschool Education</h3>
                 <div className="w-16 h-1 bg-yellow-500 mx-auto mb-2"></div>
                 <p className="text-base text-gray-600">
@@ -75,7 +88,13 @@ export default function HeroProgram() {
           <Card className="bg-gray-50 shadow rounded-2xl w-full max-w-[328px] h-[288px] flex flex-col justify-between items-center p-0">
             <CardHeader className="text-center p-4">
               <div className="flex flex-col items-center">
-                <img src="/Nanny.svg" alt="Nanny" className="h-16 w-16 mb-2" />
+                <Image 
+                  src="/Nanny.svg" 
+                  alt="Nanny" 
+                  width={64}
+                  height={64}
+                  className="h-16 w-16 mb-2"
+                />
                 <h3 className="mt-2 text-xl font-semibold mb-2">Nanny Training Center</h3>
                 <div className="w-16 h-1 bg-yellow-500 mx-auto mb-2"></div>
                 <p className="text-base text-gray-600">

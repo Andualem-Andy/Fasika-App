@@ -23,23 +23,29 @@ interface ScheduleStore {
 export const useScheduleStore = create<ScheduleStore>((set) => ({
   schedules: [],
 
-  // Fetch schedules from the backend
   fetchSchedules: async () => {
     try {
-      const response = await fetch('http://localhost:1337/api/schedules');
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/schedules`;
+      const response = await fetch(apiUrl);
+
+      if (!response.ok) {
+        const errorMessage = `Failed to fetch schedules: ${response.status} - ${response.statusText}`;
+        throw new Error(errorMessage);
+      }
+
       const data = await response.json();
       set({ schedules: data.data });
-    } catch (error) {
-      console.error('Error fetching schedules:', error);
-      toast.error('Failed to fetch schedules. Please try again.');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch schedules';
+      toast.error(errorMessage);
+      console.error('Fetch schedules error:', error);
     }
   },
 
-  // Create a new schedule and send it to the backend
   createSchedule: async (schedule) => {
     try {
-      console.log('Payload:', JSON.stringify({ data: schedule })); // Log the payload
-      const response = await fetch('http://localhost:1337/api/schedules', {
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/schedules`;
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,21 +55,21 @@ export const useScheduleStore = create<ScheduleStore>((set) => ({
         }),
       });
 
-      if (response.ok) {
-        const newSchedule = await response.json();
-        set((state) => ({ schedules: [...state.schedules, newSchedule.data] }));
-        toast.success('Schedule created successfully!');
-        return true; // Indicate success
-      } else {
+      if (!response.ok) {
         const errorData = await response.json();
-        console.error('Error creating schedule:', errorData);
-        toast.error('Failed to create schedule. Please check the console for details.');
-        return false; // Indicate failure
+        const errorMessage = errorData.error?.message || 'Failed to create schedule';
+        throw new Error(errorMessage);
       }
-    } catch (error) {
-      console.error('Error creating schedule:', error);
-      toast.error('An error occurred while creating the schedule.');
-      return false; // Indicate failure
+
+      const newSchedule = await response.json();
+      set((state) => ({ schedules: [...state.schedules, newSchedule.data] }));
+      toast.success('Schedule created successfully!');
+      return true;
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+      toast.error(errorMessage);
+      console.error('Create schedule error:', error);
+      return false;
     }
   },
 }));

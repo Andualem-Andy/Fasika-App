@@ -6,6 +6,7 @@ interface CTAButton {
   text: string;
   external: boolean;
 }
+
 interface Video {
   id: number;
   documentId: string;
@@ -123,10 +124,15 @@ export const useHeroStore = create<HeroStore>((set) => ({
 
   fetchHeroes: async () => {
     set({ loading: true, error: null });
+
     try {
-      const res = await fetch('http://localhost:1337/api/hero-sections?populate=*');
-      if (!res.ok) throw new Error('Failed to fetch hero data');
-  
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/hero-sections?populate=*`;
+      const res = await fetch(apiUrl);
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch hero data');
+      }
+
       const json = await res.json();
       const heroes = json.data?.map((item: any) => ({
         id: item.id,
@@ -209,12 +215,12 @@ export const useHeroStore = create<HeroStore>((set) => ({
               width: item.MobileView.formats.thumbnail.width,
               height: item.MobileView.formats.thumbnail.height,
               size: item.MobileView.formats.thumbnail.size,
-              sizeInBytes: item.MobileView.formats.thumbnail.sizeInBytes
-            } : undefined
-          } : undefined
+              sizeInBytes: item.MobileView.formats.thumbnail.sizeInBytes,
+            } : undefined,
+          } : undefined,
         } : undefined,
       })) || [];
-  
+
       set({ heroes, loading: false, error: null });
     } catch (error) {
       set({

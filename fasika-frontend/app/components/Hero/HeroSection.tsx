@@ -3,21 +3,20 @@ import React, { useEffect, useState } from 'react';
 import { useHeroStore } from '@/app/stores/heroStore';
 import { Star, Codesandbox, Cpu } from "lucide-react";
 import { PageSkeleton } from '@/app/components/skeletons/page-skeleton';
+import Image from 'next/image';
 
-const BASE_URL = "http://localhost:1337";
+// Use environment variable for base URL
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:1337";
 
 export default function HeroSection() {
   const { heroes, fetchHeroes, loading, error } = useHeroStore();
   const [isMobile, setIsMobile] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     fetchHeroes();
 
     const handleResize = () => {
-      const width = window.innerWidth;
-      setIsMobile(width < 768);
-      setIsDesktop(width >= 768);
+      setIsMobile(window.innerWidth < 768);
     };
 
     handleResize();
@@ -30,14 +29,18 @@ export default function HeroSection() {
   if (!hero) return <PageSkeleton />;
 
   const imageUrl = isMobile && hero.MobileView?.url
-  ? `${BASE_URL}${hero.MobileView.url}`
-  : hero.hero2image?.url
-  ? `${BASE_URL}${hero.hero2image.url}`
-  : '/fallback-image.jpg';
+    ? `${BASE_URL}${hero.MobileView.url}`
+    : hero.hero2image?.url
+    ? `${BASE_URL}${hero.hero2image.url}`
+    : '/fallback-image.jpg';
+
+  const imageAlt = isMobile 
+    ? hero.MobileView?.alternativeText || "Mobile hero image" 
+    : hero.hero2image?.alternativeText || "Desktop hero image";
 
   return (
     <div>
-        {isMobile ? (
+      {isMobile ? (
         // MOBILE LAYOUT WITH FASIKADESC ABOVE IMAGE
         <section className="bg-[#F5DE191A] py-6 px-4">
           <div className="max-w-6xl mx-auto">
@@ -84,13 +87,14 @@ export default function HeroSection() {
 
             {/* Image Section */}
             <div className="mb-6">
-            <img
-  src={imageUrl}
-  alt={isMobile 
-    ? hero.MobileView?.alternativeText || "Mobile hero image" 
-    : hero.hero2image?.alternativeText || "Desktop hero image"}
-  className="rounded-lg shadow-lg w-full"
-/>
+              <Image
+                src={imageUrl}
+                alt={imageAlt}
+                width={800}
+                height={600}
+                className="rounded-lg shadow-lg w-full"
+                priority
+              />
             </div>
 
             {/* Mobile Button */}
@@ -121,11 +125,11 @@ export default function HeroSection() {
 
             {/* Main Title */}
             <h1 className="flex flex-col text-3xl md:text-4xl font-bold text-[#374151] mb-6">
-  {hero.Inspiring?.split(" Development")[0] || hero.Inspiring}
-  <span className="text-3xl md:text-4xl font-bold text-[#374151]">
-    Development
-  </span>
-</h1>
+              {hero.Inspiring?.split(" Development")[0] || hero.Inspiring}
+              <span className="text-3xl md:text-4xl font-bold text-[#374151]">
+                Development
+              </span>
+            </h1>
 
             {/* Divider Line */}
             <div className="w-full h-px bg-[#073F27] mb-8" />
@@ -159,7 +163,6 @@ export default function HeroSection() {
                     href={button.href}
                     className="inline-block bg-[#073F27] text-[#F5DE19] text-bold font-medium shadow-md hover:bg-green-800 
                     rounded-full border border-gray-400 pt-4 pr-6 pb-4 pl-6">
-                  
                     {button.text}
                   </a>
                 ))}
@@ -171,10 +174,13 @@ export default function HeroSection() {
 
             {/* Image Section */}
             <div className="flex justify-center">
-              <img
+              <Image
                 src={imageUrl}
-                alt={hero.hero2image?.alternativeText || "Hero image"}
+                alt={imageAlt}
+                width={1200}
+                height={800}
                 className="rounded-lg shadow-lg w-full max-w-4xl"
+                priority
               />
             </div>
           </div>

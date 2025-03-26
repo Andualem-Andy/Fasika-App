@@ -78,10 +78,11 @@ export const useContactStore = create<ContactStore>((set) => ({
     set({ loading: true, error: null });
 
     try {
-      const response = await fetch('http://localhost:1337/api/contact-uses?populate=*');
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/contact-uses?populate=*`;
+      const response = await fetch(apiUrl);
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.statusText}`);
+        throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
       }
 
       const result = await response.json();

@@ -5,6 +5,8 @@ import React, { useEffect, useRef, useState, MouseEvent } from "react";
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:1337";
+
 export default function TestimonialsSection() {
   const { heroes, loading, error, fetchHeroes } = useHeroStore();
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
@@ -17,24 +19,10 @@ export default function TestimonialsSection() {
 
   // Initialize Embla Carousel
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
-  const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     fetchHeroes();
   }, [fetchHeroes]);
-
-  // Update the selected index when the carousel scrolls
-  useEffect(() => {
-    if (emblaApi) {
-      const onSelect = () => {
-        setSelectedIndex(emblaApi.selectedScrollSnap());
-      };
-      emblaApi.on("select", onSelect);
-      return () => {
-        emblaApi.off("select", onSelect);
-      };
-    }
-  }, [emblaApi]);
 
   // Handle fullscreen change events
   useEffect(() => {
@@ -52,32 +40,28 @@ export default function TestimonialsSection() {
   const seekToTwelveSeconds = (index: number) => {
     const video = videoRefs.current[index];
     if (video) {
-      video.currentTime = 12; // Seek to 12 seconds
+      video.currentTime = 12;
     }
   };
 
   if (loading) return <PageSkeleton />;
-  if (error)
-    return <div className="text-center py-10 text-red-500">Error: {error}</div>;
+  if (error) return <div className="text-center py-10 text-red-500">Error: {error}</div>;
 
   const hero = heroes.length > 0 ? heroes[0] : null;
   if (!hero) return <PageSkeleton />;
 
-  // Combine all testimonial videos into a single array
   const testimonialVideos = [
     ...(hero.Testimonialsvideo1 || []),
     ...(hero.Testimonialsvideo2 || []),
     ...(hero.Testimonialsvideo3 || []),
   ];
 
-  // Handle play/pause for a specific video
   const handlePlayPause = (index: number) => {
     const video = videoRefs.current[index];
     if (video) {
       if (video.paused) {
         if (playingIndex !== null && playingIndex !== index) {
-          const currentlyPlayingVideo = videoRefs.current[playingIndex];
-          currentlyPlayingVideo?.pause();
+          videoRefs.current[playingIndex]?.pause();
         }
         video.muted = isMuted;
         video.volume = volume;
@@ -90,7 +74,6 @@ export default function TestimonialsSection() {
     }
   };
 
-  // Handle volume change
   const handleVolumeChange = (index: number, newVolume: number) => {
     const video = videoRefs.current[index];
     if (video) {
@@ -100,7 +83,6 @@ export default function TestimonialsSection() {
     }
   };
 
-  // Handle time update
   const handleTimeUpdate = (index: number) => {
     const video = videoRefs.current[index];
     if (video) {
@@ -109,7 +91,6 @@ export default function TestimonialsSection() {
     }
   };
 
-  // Handle seek
   const handleSeek = (index: number, time: number) => {
     const video = videoRefs.current[index];
     if (video) {
@@ -117,36 +98,25 @@ export default function TestimonialsSection() {
     }
   };
 
-  // Handle fullscreen toggle
   const toggleFullscreen = (index: number) => {
     const video = videoRefs.current[index];
     if (video) {
       if (!isFullscreen) {
-        if (video.requestFullscreen) {
-          video.requestFullscreen();
-        }
+        video.requestFullscreen?.();
       } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
+        document.exitFullscreen?.();
       }
     }
   };
 
-  // Handle previous button click
   const handlePrevious = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (emblaApi) {
-      emblaApi.scrollPrev();
-    }
+    emblaApi?.scrollPrev();
   };
 
-  // Handle next button click
   const handleNext = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (emblaApi) {
-      emblaApi.scrollNext();
-    }
+    emblaApi?.scrollNext();
   };
 
   return (
@@ -169,7 +139,6 @@ export default function TestimonialsSection() {
 
           {/* Video Carousel */}
           <div className="md:w-1/2 w-full relative">
-            {/* Carousel Container */}
             <div className="embla overflow-hidden" ref={emblaRef}>
               <div className="embla__container flex">
                 {testimonialVideos.length > 0 ? (
@@ -177,24 +146,19 @@ export default function TestimonialsSection() {
                     <div className="embla__slide flex-[0_0_100%]" key={index}>
                       <div className="rounded-xl shadow-lg overflow-hidden relative group transition-all duration-300 hover:shadow-xl">
                         <div className="relative aspect-video">
-                          {/* Video Element */}
                           <video
                             ref={(el) => {
                               videoRefs.current[index] = el;
-                              if (el) {
-                                el.onloadedmetadata = () => seekToTwelveSeconds(index);
-                              }
+                              el?.addEventListener('loadedmetadata', () => seekToTwelveSeconds(index));
                             }}
-                            src={`http://localhost:1337${video.url}`}
+                            src={`${BASE_URL}${video.url}`}
                             playsInline
                             muted={isMuted}
                             className="w-full h-full object-cover"
                             onTimeUpdate={() => handleTimeUpdate(index)}
                             onClick={() => handlePlayPause(index)}
                           />
-                          {/* Video Controls */}
                           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 flex items-center justify-between">
-                            {/* Play/Pause Button */}
                             <button
                               onClick={() => handlePlayPause(index)}
                               className="p-1.5 bg-black/50 backdrop-blur-sm rounded-full shadow-sm hover:bg-black/60 transition-colors"
@@ -207,7 +171,6 @@ export default function TestimonialsSection() {
                               )}
                             </button>
 
-                            {/* Progress Bar */}
                             <div className="flex-1 mx-2">
                               <input
                                 type="range"
@@ -219,7 +182,6 @@ export default function TestimonialsSection() {
                               />
                             </div>
 
-                            {/* Volume Control */}
                             <div className="flex items-center gap-1">
                               <button
                                 onClick={() => handleVolumeChange(index, isMuted ? volume : 0)}
@@ -243,7 +205,6 @@ export default function TestimonialsSection() {
                               />
                             </div>
 
-                            {/* Fullscreen Button */}
                             <button
                               onClick={() => toggleFullscreen(index)}
                               className="p-1.5 bg-black/50 backdrop-blur-sm rounded-full shadow-sm hover:bg-black/60 transition-colors"
@@ -268,7 +229,6 @@ export default function TestimonialsSection() {
               </div>
             </div>
 
-            {/* Navigation Arrows */}
             <button
               className="hidden md:flex items-center justify-center size-8 absolute -left-12 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:scale-110 transition-transform"
               onClick={handlePrevious}

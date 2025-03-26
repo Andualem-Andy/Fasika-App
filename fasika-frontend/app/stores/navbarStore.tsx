@@ -27,27 +27,37 @@ interface NavbarData {
 interface NavbarStore {
   data: NavbarData | null;
   loading: boolean;
+  error: string | null;
   fetchNavbar: () => Promise<void>;
 }
 
 export const useNavbarStore = create<NavbarStore>((set) => ({
   data: null,
   loading: true,
+  error: null,
+
   fetchNavbar: async () => {
     try {
-      const res = await fetch(
-        'http://localhost:1337/api/global?populate[topnav][populate][logoLink][populate][image]=true&populate[topnav][populate][link]=true&populate[topnav][populate][cta]=true'
-      );
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/global?populate[topnav][populate][logoLink][populate][image]=true&populate[topnav][populate][link]=true&populate[topnav][populate][cta]=true`;
+      const res = await fetch(apiUrl);
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status} - ${res.statusText}`);
+      }
+
       const json = await res.json();
+
       if (json.data?.topnav) {
-        set({ data: json.data.topnav, loading: false });
+        set({ data: json.data.topnav, loading: false, error: null });
       } else {
-        console.error('Error: topnav is missing in API response', json);
-        set({ loading: false });
+        throw new Error('Navbar data not found in response');
       }
     } catch (error) {
-      console.error('Error fetching Navbar:', error);
-      set({ loading: false });
+      console.error('Failed to fetch navbar:', error);
+      set({ 
+        loading: false, 
+        error: error instanceof Error ? error.message : 'Failed to fetch navbar data' 
+      });
     }
   },
 }));

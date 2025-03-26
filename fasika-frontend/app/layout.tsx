@@ -1,25 +1,12 @@
+import { Comic_Neue } from 'next/font/google';
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-// Load Geist fonts
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
-
-// Define Comic Neue as a custom font
-const comicNeue = {
-  className: "font-comic-neue",
-  style: {
-    fontFamily: "Comic Neue, cursive",
-  },
-};
+const comicNeue = Comic_Neue({
+  weight: ['300', '400', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "Fasika Child Care Center",
@@ -32,17 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        {/* Add Comic Neue from Google Fonts */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body
-        className={`${comicNeue.className} antialiased`}
-      >
+    <html lang="en" className={comicNeue.className}>
+      <body className="antialiased">
         {children}
       </body>
     </html>

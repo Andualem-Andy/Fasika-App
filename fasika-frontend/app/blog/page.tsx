@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { useBlogStore } from '@/app/stores/blogStore';
-import PageLayout from '@/app/components/PageLayout/PageLayout';
-import NewsletterSection from '../components/Newsletter/Newsletter';
-import Footer from '../components/footer/footer';
-import BlogCard from '../components/shapes/BlogCard';
+import React, { useEffect, useState } from "react";
+import { useBlogStore } from "@/app/stores/blogStore";
+import PageLayout from "@/app/components/PageLayout/PageLayout";
+import NewsletterSection from "../components/Newsletter/Newsletter";
+import Footer from "../components/footer/footer";
+import BlogCard from "../components/shapes/BlogCard";
 import {
   Pagination,
   PaginationContent,
@@ -13,7 +13,8 @@ import {
   PaginationNext,
   PaginationPrevious,
   PaginationEllipsis,
-} from '@/components/ui/pagination';
+} from "@/components/ui/pagination";
+
 
 export default function BlogPage() {
   const {
@@ -25,7 +26,7 @@ export default function BlogPage() {
     currentPage,
     setPage,
   } = useBlogStore();
-  const [bgImageUrl, setBgImageUrl] = useState<string>('');
+  const [bgImageUrl, setBgImageUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const pageSize = 6;
 
@@ -35,9 +36,11 @@ export default function BlogPage() {
 
   useEffect(() => {
     if (data && data.length > 0) {
-      const blogWithBg = data.find(blog => blog.blogbg?.url);
+      const blogWithBg = data.find((blog) => blog.blogbg?.url);
       if (blogWithBg?.blogbg?.formats?.large?.url) {
-        setBgImageUrl(`http://localhost:1337${blogWithBg.blogbg.formats.large.url}`);
+        setBgImageUrl(
+          `${process.env.NEXT_PUBLIC_STRAPI_URL}${blogWithBg.blogbg.formats.large.url}`
+        );
       }
     }
   }, [data]);
@@ -112,9 +115,9 @@ export default function BlogPage() {
               key={blog.id}
               BlogDate={blog.BlogDate}
               BlogTitle={blog.BlogTitle}
-              BlogDesc={blog.BlogDesc[0]?.children[0]?.text || 'No description available'}
-              ReadTime={blog.ReadTime || 'Unknown'}
-              TimeDuration={blog.TimeDuration || 'Unknown'}
+              BlogDesc={blog.BlogDesc[0]?.children[0]?.text || "No description available"}
+              ReadTime={blog.ReadTime || "Unknown"}
+              TimeDuration={blog.TimeDuration || "Unknown"}
               slug={blog.slug}
               coverBlog={blog.coverBlog}
             />
@@ -126,13 +129,17 @@ export default function BlogPage() {
             <PaginationPrevious
               onClick={() => handlePagination(currentPage - 1)}
               isActive={currentPage > 1}
-              className={`px-3 py-1 sm:px-4 sm:py-2 ${currentPage <= 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-500'} text-white rounded-lg`}
+              className={`px-3 py-1 sm:px-4 sm:py-2 ${
+                currentPage <= 1 ? "bg-gray-300 cursor-not-allowed" : "bg-gray-500"
+              } text-white rounded-lg`}
             />
             {renderPaginationItems()}
             <PaginationNext
               onClick={() => handlePagination(currentPage + 1)}
               isActive={currentPage < totalPages}
-              className={`px-3 py-1 sm:px-4 sm:py-2 ${currentPage >= totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-500'} text-white rounded-lg`}
+              className={`px-3 py-1 sm:px-4 sm:py-2 ${
+                currentPage >= totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-gray-500"
+              } text-white rounded-lg`}
             />
           </PaginationContent>
         </Pagination>

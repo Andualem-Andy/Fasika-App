@@ -1,4 +1,3 @@
-// ui/chart.ts
 
 export const chartConfig = {
   desktop: {

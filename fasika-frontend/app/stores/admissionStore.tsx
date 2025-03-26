@@ -120,14 +120,15 @@ export const useAdmissionStore = create<AdmissionStore>((set) => ({
     set({ loading: true, error: null });
 
     try {
-      const response = await fetch('http://localhost:1337/api/admission-pages?populate=*');
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/admission-pages?populate=*`;
+      const response = await fetch(apiUrl);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
       }
 
       const result = await response.json();
-      
+
       if (result?.data?.length > 0) {
         set({ data: result.data[0] as AdmissionData, loading: false });
       } else {

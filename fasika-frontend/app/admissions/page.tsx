@@ -8,7 +8,8 @@ import FilePreview from '../components/shapes/FilePreview';
 import Footer from '../components/footer/footer';
 import FAQsPage from './FAQsPage';
 import ScrollDownArrow from '../components/shapes/ScrollDownArrow';
-import {FAQChatbot} from '../Chatbot/FAQChatbot';
+import { FAQChatbot } from '../Chatbot/FAQChatbot';
+import Image from 'next/image'; // Import the Image component
 
 export default function AdmissionPage() {
   const { data, loading, error, fetchServiceData } = useAdmissionStore();
@@ -19,17 +20,17 @@ export default function AdmissionPage() {
   // Fetch data
   useEffect(() => {
     if (!data) fetchServiceData();
-  }, []);
+  }, [data, fetchServiceData]); // Add dependencies to fix the warning
 
   // Set background and enrollment image URLs
   useEffect(() => {
     if (data?.admissionbg?.formats?.large?.url) {
-      const fullBgUrl = `http://localhost:1337${data.admissionbg.formats.large.url}`;
+      const fullBgUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${data.admissionbg.formats.large.url}`;
       setBgImageUrl(fullBgUrl);
     }
 
     if (data?.enrollimg?.url) {
-      const fullEnrollUrl = `http://localhost:1337${data.enrollimg.url}`;
+      const fullEnrollUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${data.enrollimg.url}`;
       setEnrollImageUrl(fullEnrollUrl);
     }
   }, [data]);
@@ -102,12 +103,15 @@ export default function AdmissionPage() {
                   <image href="addmissionbg2.svg" x="0" y="0" width="100%" height="100%" />
                 </svg>
 
-                {/* Image positioned to overlap with the SVG */}
+                {/* Replace <img> with <Image /> */}
                 {enrollImageUrl && (
-                  <img
+                  <Image
                     src={enrollImageUrl}
                     alt={data?.enrollimg?.alternativeText || 'Enrollment Image'}
+                    width={280} // Intrinsic width
+                    height={500} // Intrinsic height
                     className="absolute top-[120px] left-[30px] z-10 w-[280px] h-[500px]"
+                    priority // Add priority for above-the-fold images
                   />
                 )}
 
@@ -177,7 +181,7 @@ export default function AdmissionPage() {
                       {data?.DownloadsPdf?.[0] && (
                         <FilePreview
                           fileName={data.DownloadsPdf[0].name || 'Brochure'}
-                          fileUrl={`http://localhost:1337${data.DownloadsPdf[0].url}`}
+                          fileUrl={`${process.env.NEXT_PUBLIC_STRAPI_URL}${data.DownloadsPdf[0].url}`}
                         />
                       )}
                     </div>
@@ -279,7 +283,7 @@ export default function AdmissionPage() {
                     {data?.DownloadsPdf?.[0] && (
                       <FilePreview
                         fileName={data.DownloadsPdf[0].name || 'Brochure'}
-                        fileUrl={`http://localhost:1337${data.DownloadsPdf[0].url}`}
+                        fileUrl={`${process.env.NEXT_PUBLIC_STRAPI_URL}${data.DownloadsPdf[0].url}`}
                       />
                     )}
                   </div>
@@ -380,7 +384,7 @@ export default function AdmissionPage() {
                     {data?.DownloadsPdf?.[0] && (
                       <FilePreview
                         fileName={data.DownloadsPdf[0].name || 'Brochure'}
-                        fileUrl={`http://localhost:1337${data.DownloadsPdf[0].url}`}
+                        fileUrl={`${process.env.NEXT_PUBLIC_STRAPI_URL}${data.DownloadsPdf[0].url}`}
                       />
                     )}
                   </div>
@@ -406,7 +410,7 @@ export default function AdmissionPage() {
       <FAQsPage />
       <NewsletterSection />
       <Footer />
-      <FAQChatbot/>
+      <FAQChatbot />
     </PageLayout>
   );
 }

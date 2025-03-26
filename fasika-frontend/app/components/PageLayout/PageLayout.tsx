@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react'; // Add this import
+import React from 'react';
+import Image from 'next/image';
 import Navbar from '@/app/components/header/Navbar';
-import ScrollDownArrow from '../shapes/ScrollDownArrow';
 
 interface PageLayoutProps {
   title: string;
@@ -10,16 +10,14 @@ interface PageLayoutProps {
   children: React.ReactNode;
   loading: boolean;
   error?: string | null;
-  isBlogPage?: boolean; // New prop for blog page
+  isBlogPage?: boolean;
 }
 
 export default function PageLayout({
   title,
   bgImageUrl,
   children,
-  loading,
-  error,
-  isBlogPage = false, // Default to false
+  isBlogPage = false,
 }: PageLayoutProps) {
   const [screenWidth, setScreenWidth] = React.useState(0);
   const [screenHeight, setScreenHeight] = React.useState(0);
@@ -40,12 +38,13 @@ export default function PageLayout({
       window.addEventListener('resize', handleResize);
       handleResize();
 
-      setTimeout(() => {
+      const loadingTimer = setTimeout(() => {
         setIsLoading(false);
       }, 600);
 
       return () => {
         window.removeEventListener('resize', handleResize);
+        clearTimeout(loadingTimer);
       };
     }
   }, [isClient]);
@@ -57,29 +56,34 @@ export default function PageLayout({
   const is540x720 = screenWidth === 540 && screenHeight === 720;
   const is1280x800 = screenWidth === 1280 && screenHeight === 800;
 
+  // Calculate container height first to prevent layout shifts
+  const containerHeight = isMobile
+    ? isShortDevice
+      ? '30vh'
+      : is540x720
+      ? '40vh'
+      : '24vh'
+    : isSmallTablet
+    ? '80vh'
+    : is1280x800
+    ? '75vh'
+    : isTablet
+    ? '33vh'
+    : '100vh';
+
   return (
     <div className="w-full overflow-x-hidden">
       <Navbar />
       <div className="w-screen relative left-1/2 transform -translate-x-1/2">
+        {/* Maintain exact original structure */}
         <div
           className="w-full h-auto block max-w-full relative"
           style={{
-            minHeight: isMobile
-              ? isShortDevice
-                ? '30vh'
-                : is540x720
-                ? '40vh'
-                : '24vh'
-              : isSmallTablet
-              ? '80vh'
-              : is1280x800
-              ? '75vh'
-              : isTablet
-              ? '33vh'
-              : '100vh',
+            minHeight: containerHeight,
             overflow: 'hidden',
           }}
         >
+          {/* Original background layer */}
           <div
             className="absolute inset-0 w-full h-full bg-cover bg-center"
             style={{
@@ -106,17 +110,21 @@ export default function PageLayout({
             }}
           />
 
+          {/* Image container - only changed img to Image */}
           <div className="absolute inset-0 w-full h-full pointer-events-none z-10">
-            <img
+            <Image
               src="/page.svg"
               alt={title}
+              width={screenWidth}
+              height={screenHeight}
               className="w-full h-full object-contain pointer-events-none sm:object-cover"
               style={{
                 maxWidth: '100%',
                 height: 'auto',
                 objectPosition: 'center center',
               }}
-              loading="lazy"
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
 
@@ -136,20 +144,20 @@ export default function PageLayout({
               <h1
                 className="font-bold text-[#073F27] text-center"
                 style={{
-                  fontSize: isBlogPage // Conditionally adjust font size for blog page
+                  fontSize: isBlogPage 
                     ? isMobile
                       ? isShortDevice
-                        ? '1.5rem' // Smaller font size for mobile
+                        ? '1.5rem' 
                         : is540x720
-                        ? '2rem' // Smaller font size for 540x720
-                        : '2rem' // Smaller font size for other mobile devices
+                        ? '2rem' 
+                        : '2rem'
                       : isSmallTablet
-                      ? '3rem' // Smaller font size for small tablets
+                      ? '3rem' 
                       : is1280x800
-                      ? '4rem' // Smaller font size for 1280x800
+                      ? '4rem' 
                       : isTablet
-                      ? '4rem' // Smaller font size for tablets
-                      : '5rem' // Smaller font size for desktops
+                      ? '4rem' 
+                      : '5rem' 
                     : isMobile
                     ? isShortDevice
                       ? '2rem'
@@ -162,7 +170,7 @@ export default function PageLayout({
                     ? '6rem'
                     : isTablet
                     ? '6rem'
-                    : '8rem', // Default font size for other pages
+                    : '8rem',
                   lineHeight: '1',
                   maxWidth: '80%',
                 }}

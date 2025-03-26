@@ -13,6 +13,14 @@ interface ImageFormat {
   name: string;
 }
 
+export interface ImageFormats {
+  thumbnail?: ImageFormat;
+  small?: ImageFormat;
+  medium?: ImageFormat;
+  large?: ImageFormat;
+  [key: string]: ImageFormat | undefined;
+}
+
 export interface ImageData {
   id: number;
   documentId: string;
@@ -21,12 +29,7 @@ export interface ImageData {
   caption: string | null;
   width: number;
   height: number;
-  formats: {
-    thumbnail: ImageFormat;
-    small: ImageFormat;
-    medium: ImageFormat;
-    large: ImageFormat;
-  };
+  formats: ImageFormats;
   hash: string;
   ext: string;
   mime: string;
@@ -40,47 +43,9 @@ export interface ImageData {
   publishedAt: string;
 }
 
-// interface BlogDescItem {
-//   type: string;
-//   children: { type: string; text: string }[];
-// }
-
-export interface BlogData {
-  gallery: any;
-  id: number;
-  documentId: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  News: string;
-  NewsDesc: string;
-  BlogDate: string;
-  BlogTitle: string;
-  BlogDesc: BlogDescItem[];
-  ReadTime: string;
-  TimeDuration: string;
-  slug: string;
-  blogbg: ImageData;
-  coverBlog: ImageData[];
-  galleryImages: ImageData[]; // image gallary store update
-}
-
-interface BlogStore {
-  data: BlogData[] | null;
-  loading: boolean;
-  error: string | null;
-  totalPages: number;
-  currentPage: number;
-  fetchBlogData: (page: number, pageSize: number) => Promise<void>;
-  setPage: (page: number) => void;
-  addNewBlog: (newBlog: BlogData) => void;
-}
-
-// slung 
-
 export interface BlogDescChild {
-  bold: any;
-  italic: any;
+  bold?: boolean;
+  italic?: boolean;
   type: string;
   text: string;
 }
@@ -98,40 +63,83 @@ export interface BlogDescParagraph {
 
 export type BlogDescItem = BlogDescHeading | BlogDescParagraph;
 
+export interface BlogData {
+  Authorbio: string | undefined;
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  News: string;
+  NewsDesc: string;
+  BlogDate: string;
+  BlogTitle: string;
+  BlogDesc: BlogDescItem[];
+  ReadTime: string;
+  TimeDuration: string;
+  slug: string;
+  blogbg: ImageData;
+  coverBlog: ImageData[];
+  galleryImages: ImageData[] | null;
+  authorName: string;
+  AuthorBio: string;
+  Authorimg: ImageData;
+}
+
+interface ApiResponse {
+  data: BlogData[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
+
+interface BlogStore {
+  data: BlogData[] | null;
+  loading: boolean;
+  error: string | null;
+  totalPages: number;
+  currentPage: number;
+  fetchBlogData: (page: number, pageSize: number) => Promise<void>;
+  setPage: (page: number) => void;
+  addNewBlog: (newBlog: BlogData) => void;
+}
 
 export const useBlogStore = create<BlogStore>((set) => ({
   data: null,
   loading: false,
   error: null,
-  totalPages: 1, // Default to 1 page
-  currentPage: 1, // Default to first page
+  totalPages: 1,
+  currentPage: 1,
 
   fetchBlogData: async (page: number, pageSize: number) => {
     set({ loading: true, error: null });
 
     try {
-      const response = await fetch(
-        `http://localhost:1337/api/blogs?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
-      );
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/blogs?populate=*&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+      const response = await fetch(apiUrl);
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.statusText}`);
       }
 
-      const result = await response.json();
-      console.log('Fetched data:', result.data);
+      const result: ApiResponse = await response.json();
 
       if (Array.isArray(result.data)) {
         set({
           data: result.data,
           loading: false,
-          totalPages: result.meta.pagination.pageCount, // Set total pages from the response metadata
-          currentPage: result.meta.pagination.page, // Set current page from the response metadata
+          totalPages: result.meta.pagination.pageCount,
+          currentPage: result.meta.pagination.page,
         });
       } else {
         throw new Error('No blog data found');
       }
-    } catch (error) {
-      console.error('Error fetching blog data:', error);
+    } catch (error: unknown) {
       set({
         error: error instanceof Error ? error.message : 'An unknown error occurred',
         loading: false,

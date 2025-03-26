@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 type Paragraph = {
   type: string;
   children: Array<{
@@ -6,6 +7,7 @@ type Paragraph = {
     text: string;
   }>;
 };
+
 interface AboutData {
   aboutmotto: string;
   Genesis: string;
@@ -21,7 +23,7 @@ interface AboutData {
   HolisticGrowthdesc: Paragraph[];
   HolisticGrowthAdditional?: string;
   SpecialNeedsdesc: Paragraph[];
-  SpecialNeedsAdditional?: string; 
+  SpecialNeedsAdditional?: string;
   Learningevtdesc: Paragraph[];
   LearningevtAdditional?: string;
   Everychild: string;
@@ -58,18 +60,22 @@ export const useAboutStore = create<AboutStore>((set) => ({
 
   fetchAboutData: async () => {
     set({ loading: true, error: null });
+
     try {
-      const res = await fetch('http://localhost:1337/api/about-pages?populate=*');
-      if (!res.ok) throw new Error('Failed to fetch about data');
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/about-pages?populate=*`;
+      const res = await fetch(apiUrl);
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch about data');
+      }
 
       const json = await res.json();
-
-      // Access data directly (assuming json.data is an array, access the first element)
       const aboutData = json.data[0];
 
-      if (!aboutData) throw new Error('No data found');
+      if (!aboutData) {
+        throw new Error('No data found');
+      }
 
-      // Store the full data and extract URLs for images
       const data: AboutData = {
         aboutmotto: aboutData.aboutmotto,
         Genesis: aboutData.Genesis,
@@ -87,15 +93,11 @@ export const useAboutStore = create<AboutStore>((set) => ({
         Learningevtdesc: aboutData.Learningevtdesc,
         Everychild: aboutData.Everychild,
         FosteringGrowth: aboutData.FosteringGrowth,
-
-        // Extract the aboutbg image
         aboutbg: {
           url: aboutData.aboutbg?.url || '',
           alternativeText: aboutData.aboutbg?.alternativeText || null,
           formats: aboutData.aboutbg?.formats || {},
         },
-
-        // Extract the Genesisimg image
         Genesisimg: {
           url: aboutData.Genesisimg?.url || '',
           alternativeText: aboutData.Genesisimg?.alternativeText || null,

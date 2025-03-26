@@ -28,41 +28,36 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
 
   // Subscribe function
   subscribe: async () => {
-    // Start loading
     set({ isLoading: true, error: '' });
 
     try {
-      const response = await fetch('http://localhost:1337/api/subscriptions', {
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/subscriptions`;
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          data: { email: get().email},
+          data: { email: get().email },
         }),
       });
 
-      // Handle non-OK responses
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({
           error: { message: 'Subscription failed. Please try again.' },
         }));
 
-        // Check for duplicate email error
         if (errorData.error?.message === 'This attribute must be unique') {
-          throw new Error('This email is already subscribed.'); // Specific error for duplicate emails
+          throw new Error('This email is already subscribed.');
         } else {
           throw new Error(errorData.error?.message || 'Subscription failed. Please try again.');
         }
       }
 
-      // On success
       set({ isSubscribed: true, email: '' });
     } catch (error) {
-      // Handle errors
       set({
         error: error instanceof Error ? error.message : 'Subscription failed. Please try again.',
       });
     } finally {
-      // Stop loading
       set({ isLoading: false });
     }
   },

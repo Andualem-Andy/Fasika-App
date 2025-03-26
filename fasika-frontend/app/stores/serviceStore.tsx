@@ -72,7 +72,7 @@ interface ServiceStore {
   data: ServiceData | null;
   loading: boolean;
   error: string | null;
-  fetchServiceData: () => Promise<void>;
+  fetchServiceData: (options?: { signal?: AbortSignal }) => Promise<void>;
 }
 
 export const useServiceStore = create<ServiceStore>((set) => ({
@@ -80,25 +80,35 @@ export const useServiceStore = create<ServiceStore>((set) => ({
   loading: false,
   error: null,
 
-  fetchServiceData: async () => {
+  fetchServiceData: async (options) => {
     set({ loading: true, error: null });
 
     try {
-      const response = await fetch('http://localhost:1337/api/service-pages?populate=*'); // Replace with your API endpoint
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/service-pages?populate=*`;
+      const response = await fetch(apiUrl, {
+        signal: options?.signal,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.statusText}`);
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       const result = await response.json();
 
-      // Check if result.data is an array and contains at least one item
-      if (Array.isArray(result.data) && result.data.length > 0) {
-        set({ data: result.data[0], loading: false });
-      } else {
+      if (!result.data || !Array.isArray(result.data) || result.data.length === 0) {
         throw new Error('No service data found');
       }
+
+      set({ data: result.data[0], loading: false });
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        console.log('Fetch aborted');
+        return;
+      }
+      
       set({
         error: error instanceof Error ? error.message : 'An unknown error occurred',
         loading: false,
