@@ -16,10 +16,12 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
 
   backend:
-    build: 
+    build:
       context: ./fasika-backend2
+      dockerfile: Dockerfile
       args:
         NODE_ENV: production
     restart: unless-stopped
@@ -34,15 +36,17 @@ services:
       DATABASE_PASSWORD: ${DB_PASSWORD}
       DATABASE_SSL: "false"
     volumes:
-      - ./fasika-backend2/public/uploads:/app/public/uploads
-      - ./fasika-backend2/config:/app/config
+      - ./fasika-backend2:/app
+      - /app/node_modules
+      - /app/.cache
+      - /app/build
     ports:
       - "1337:1337"
     depends_on:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:1337/admin || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:1337/_health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -51,12 +55,17 @@ services:
   frontend:
     build:
       context: ./fasika-frontend
+      dockerfile: Dockerfile
       args:
         NODE_ENV: production
     restart: unless-stopped
     environment:
       NODE_ENV: production
       NEXT_PUBLIC_STRAPI_URL: http://backend:1337
+    volumes:
+      - ./fasika-frontend:/app
+      - /app/node_modules
+      - /app/.next
     ports:
       - "3000:3000"
     depends_on:
