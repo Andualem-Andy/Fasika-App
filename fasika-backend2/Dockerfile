@@ -1,19 +1,23 @@
-FROM node:20
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package*.json ./
-RUN npm install
+# Install dependencies
+COPY package.json package-lock.json ./
+RUN npm install --production
 
-# Copy the rest of the application code
+# Copy Strapi files
 COPY . .
 
-# Build the Strapi project
+# Build for production
 RUN npm run build
 
-# Expose the Strapi port
+# Add healthcheck script
+RUN echo '{"scripts":{"healthcheck":"node -e \"require('axios').get('http://localhost:1337/admin').catch(()=>process.exit(1))\""}}' > package.health.json && \
+    jq -s '.[0] * .[1]' package.json package.health.json > package.tmp.json && \
+    mv package.tmp.json package.json && \
+    rm package.health.json
+
 EXPOSE 1337
 
-# Start Strapi
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
