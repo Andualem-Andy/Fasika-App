@@ -4,7 +4,8 @@ services:
   db:
     image: postgres:13
     restart: unless-stopped
-    env_file: ./fasika-backend2/.env
+    env_file: 
+      - ./.env  # Single source for all env variables
     environment:
       POSTGRES_DB: strapi_prod
       POSTGRES_USER: strapi_prod
@@ -25,7 +26,8 @@ services:
       args:
         NODE_ENV: production
     restart: unless-stopped
-    env_file: ./fasika-backend2/.env
+    env_file: 
+      - ./.env
     environment:
       NODE_ENV: production
       DATABASE_CLIENT: postgres
@@ -35,6 +37,10 @@ services:
       DATABASE_USERNAME: strapi_prod
       DATABASE_PASSWORD: ${DB_PASSWORD}
       DATABASE_SSL: "false"
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
+      JWT_SECRET: ${JWT_SECRET}
     volumes:
       - ./fasika-backend2:/app
       - /app/node_modules
@@ -59,6 +65,8 @@ services:
       args:
         NODE_ENV: production
     restart: unless-stopped
+    env_file: 
+      - ./.env
     environment:
       NODE_ENV: production
       NEXT_PUBLIC_STRAPI_URL: http://backend:1337
