@@ -1,13 +1,5 @@
-import { Comic_Neue } from 'next/font/google';
 import './globals.css';
 import HydrationGuard from './HydrationGuard';
-
-const comicNeue = Comic_Neue({
-  weight: ['300', '400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-comic-neue',
-});
 
 export const metadata = {
   title: "Fasika Child Care Center",
@@ -20,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={comicNeue.className}>
+    <html lang="en" style={{ fontFamily: "'Comic Neue', sans-serif" }}>
       <body className="antialiased">
         <HydrationGuard>{children}</HydrationGuard>
       </body>
