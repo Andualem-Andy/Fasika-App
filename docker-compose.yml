@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   db:
@@ -9,7 +8,7 @@ services:
     environment:
       POSTGRES_DB: strapi_prod
       POSTGRES_USER: strapi_prod
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: "8gc8gOWpFADVbfFvjbor0g"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
