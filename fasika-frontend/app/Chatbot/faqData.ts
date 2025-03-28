@@ -1,11 +1,11 @@
 const faqData = [
   {
-    "question": "How do I apply for admission?",
-    "answer": "You can apply online through our admissions portal."
+    "question": "How do I enroll my child?",
+    "answer": "You can enroll your child by filling out our online enrollment form or visiting us in person."
   },
   {
     "question": "What documents are required?",
-    "answer": "You need a birth certificate, immunization card, and passport photos."
+    "answer": "You need a birth certificate, immunization card, and 4 passport size photos of the child and one photo of each parent"
   },
   {
     "question": "What is the admission process?",
@@ -13,19 +13,19 @@ const faqData = [
   },
   {
     "question": "What are your operating hours?",
-    "answer": "Our daycare is open from 7:00 AM to 6:00 PM, Monday through Friday."
+    "answer": "the school’s  working hour is from 7:30 AM to  4:00 PM, Monday through Friday, while that of the daycare is from 6:30 AM to 6:30 PM Monday through Friday and 6:30 AM 12:30 PM on Saturdays."
   },
   {
     "question": "What ages do you accept?",
-    "answer": "We accept children from 6 months to 5 years old."
+    "answer": "We accept children from 6 months to 4 years old for the daycare and 4 years to 6 years for the preschool"
   },
   {
     "question": "Do you provide meals and snacks?",
-    "answer": "Yes, we provide healthy meals and snacks throughout the day, following nutritional guidelines."
+    "answer": "No, we don’t provide meals"
   },
   {
     "question": "What is your staff-to-child ratio?",
-    "answer": "We maintain a low staff-to-child ratio of 1:4 to ensure personalized care and attention."
+    "answer": "In the Daycare we maintain a low staff-to-child ratio of 1:4 to ensure personalized care and attention. For infants and special needs children it is 1:1. In the Preschool the teacher student ratio is 1:11 "
   },
   {
     "question": "Do you offer part-time or drop-in care?",
@@ -33,7 +33,7 @@ const faqData = [
   },
   {
     "question": "What safety measures do you have in place?",
-    "answer": "We have secure entry systems, CCTV monitoring, and trained staff certified in CPR and first aid."
+    "answer": "We have secure entry systems, CCTV monitoring. We have clinical nurses who would provide first aid services and check children’s tempreture and other symptoms when they suspect some kind of health problem."
   },
   {
     "question": "What is your sick child policy?",
@@ -41,11 +41,11 @@ const faqData = [
   },
   {
     "question": "Do you administer medication?",
-    "answer": "Yes, we can administer medication with a signed consent form and clear instructions from the parent."
+    "answer": "Yes, we do administer medication with a signed consent form and clear instructions from the parent. There is a medication authorization form that would be filled and signed by parents/guardians."
   },
   {
     "question": "Are your staff trained in first aid?",
-    "answer": "Yes, all our staff members are trained in first aid and CPR."
+    "answer": "Yes, all our staff members are trained in first aid, despite the fact that there is a clinical nurse in every branch"
   },
   {
     "question": "What is your daily schedule like?",
@@ -53,7 +53,7 @@ const faqData = [
   },
   {
     "question": "Do you follow a specific curriculum?",
-    "answer": "Yes, we follow a play-based learning curriculum that focuses on social, emotional, and cognitive development."
+    "answer": "Yes, we follow a play-based learning curriculum that focuses on social, emotional, and cognitive development, which is supplemented by Montessori Method ."
   },
   {
     "question": "Do you offer outdoor playtime?",
@@ -62,10 +62,6 @@ const faqData = [
   {
     "question": "Do you provide art and music activities?",
     "answer": "Yes, we incorporate art, music, and creative activities into our daily program."
-  },
-  {
-    "question": "How do I enroll my child?",
-    "answer": "You can enroll your child by filling out our online enrollment form or visiting us in person."
   },
   {
     "question": "What is the cost of daycare?",
@@ -81,7 +77,7 @@ const faqData = [
   },
   {
     "question": "What is your late pickup policy?",
-    "answer": "A late fee of $10 per 15 minutes will be charged for pickups after 6:00 PM."
+    "answer": "At the Daycare,  late fee of Birr 100 per 30 minutes will be charged for pickups after 6:30 PM.The same amount is paid for late pickup (after 4:00 PM) of children from the Preschool. "
   },
   {
     "question": "Do you allow visitors during the day?",
@@ -89,15 +85,15 @@ const faqData = [
   },
   {
     "question": "What is your holiday schedule?",
-    "answer": "We are closed on major holidays, including New Year's Day, Thanksgiving, and Christmas."
+    "answer": "We are closed on major religious holidays, including  Christmas, Easter Eid Alfetir, Eid Aladha, etc. and non-religious holidays such as  New Year, Commemoration of Battle of Adwa, etc"
   },
   {
-    "question": "Do you accommodate children with special needs?",
+    "question": "Do you accommodate (accept) children with special needs?",
     "answer": "Yes, we work with families to accommodate children with special needs. Please contact us to discuss your child's requirements."
   },
   {
     "question": "Do you have a speech therapist on staff?",
-    "answer": "We do not have a speech therapist on staff, but we can provide referrals to local specialists."
+    "answer": "Yes, we have speech therapists at all branches of the daycare and in the preschool."
   },
   {
     "question": "Can parents participate in activities?",
@@ -105,7 +101,7 @@ const faqData = [
   },
   {
     "question": "How do you communicate with parents about their child's progress?",
-    "answer": "We provide daily updates through our app and hold parent-teacher conferences twice a year."
+    "answer": "We provide daily updates through communication book, and our telegram chanel. We also hold parent-teacher conferences twice a year.."
   },
   {
     "question": "Do you offer parent workshops or resources?",
@@ -113,7 +109,7 @@ const faqData = [
   },
   {
     "question": "Do you provide transportation?",
-    "answer": "No, we do not provide transportation at this time."
+    "answer": "Yes, we do provide transportation, but have only one bus and it does not cover all locations. Please call and discuss the possibility of getting the service ahead of time."
   },
   {
     "question": "Can I tour your facility before enrolling?",
@@ -121,11 +117,11 @@ const faqData = [
   },
   {
     "question": "What should my child bring to daycare?",
-    "answer": "Please bring a change of clothes, diapers (if applicable), and any comfort items like a blanket or stuffed animal."
+    "answer": "Please bring a change of clothes, diapers and wipes (if applicable), any comfort items like a blanket, bed sheets,  and slippers (if applicable)."
   },
   {
     "question": "Do you celebrate birthdays?",
-    "answer": "Yes, we celebrate birthdays with a small party during snack time. Parents are welcome to bring treats."
+    "answer": "Yes, we celebrate birthdays upon parents’ request. Please to the school management for details."
   },
   {
     "question": "What is your policy on screen time?",
@@ -137,7 +133,7 @@ const faqData = [
   },
   {
     "question": "What is your approach to discipline?",
-    "answer": "We use positive reinforcement and redirection to guide children's behavior in a constructive way."
+    "answer": "We use positive reinforcement and redirection to guide children's behavior in a constructive way.Corporal punishment and verbal abuse is absolutely prohibited. Any Fasika staff found exercising this will be punished even be fired."
   },
   {
     "question": "Do you have a nap or rest time?",
@@ -145,12 +141,9 @@ const faqData = [
   },
   {
     "question": "How do you handle potty training?",
-    "answer": "We work closely with parents to support potty training and follow their preferred methods."
+    "answer": "Yes, It will take only a couple of weeks for our experienced staff to train children, They of course work closely with parents to support potty training."
   },
-  {
-    "question": "Do you offer extracurricular activities?",
-    "answer": "Yes, we offer extracurricular activities such as music, dance, and sports."
-  },
+  
   {
     "question": "How do you handle allergies and dietary restrictions?",
     "answer": "We accommodate allergies and dietary restrictions with customized meal plans and strict safety protocols."
@@ -180,7 +173,7 @@ const faqData = [
     "answer": "Yes, we offer language programs to introduce children to new languages in a fun and engaging way."
   },
   {
-    "question": "Do you have a parent advisory board?",
+    "question": "Do you have a parents’ committee?",
     "answer": "Yes, we have a parent advisory board to involve parents in decision-making and improvements."
   },
   {
