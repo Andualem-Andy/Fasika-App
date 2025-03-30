@@ -31,7 +31,7 @@ export const useSubscriptionStore = create<SubscriptionState>((set, get) => ({
     set({ isLoading: true, error: '' });
 
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/subscriptions`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/subscriptions`;
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

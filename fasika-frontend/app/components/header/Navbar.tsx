@@ -16,7 +16,7 @@ import { useNavbarStore } from '@/app/stores/navbarStore';
 export default function Navbar() {
   const { data, loading, fetchNavbar } = useNavbarStore();
   const pathname = usePathname();
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     fetchNavbar();

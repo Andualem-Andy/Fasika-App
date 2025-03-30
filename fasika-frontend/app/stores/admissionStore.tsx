@@ -120,7 +120,7 @@ export const useAdmissionStore = create<AdmissionStore>((set) => ({
     set({ loading: true, error: null });
 
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/admission-pages?populate=*`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/admission-pages?populate=*`;
       const response = await fetch(apiUrl);
 
       if (!response.ok) {

@@ -29,12 +29,12 @@ export default function AdmissionPage() {
   // Set image URLs effect
   useEffect(() => {
     if (data?.admissionbg?.formats?.large?.url) {
-      const fullBgUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${data.admissionbg.formats.large.url}`;
+      const fullBgUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${data.admissionbg.formats.large.url}`;
       setBgImageUrl(fullBgUrl);
     }
 
     if (data?.enrollimg?.url) {
-      const fullEnrollUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${data.enrollimg.url}`;
+      const fullEnrollUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${data.enrollimg.url}`;
       setEnrollImageUrl(fullEnrollUrl);
     }
   }, [data]);
@@ -151,7 +151,7 @@ export default function AdmissionPage() {
                       {data?.DownloadsPdf?.[0] && (
                         <FilePreview
                           fileName={data.DownloadsPdf[0].name || 'Brochure'}
-                          fileUrl={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${data.DownloadsPdf[0].url}`}
+                          fileUrl={`${process.env.NEXT_PUBLIC_STRAPI_URL}${data.DownloadsPdf[0].url}`}
                         />
                       )}
                     </div>
@@ -225,7 +225,7 @@ export default function AdmissionPage() {
                     {data?.DownloadsPdf?.[0] && (
                       <FilePreview
                         fileName={data.DownloadsPdf[0].name || 'Brochure'}
-                        fileUrl={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${data.DownloadsPdf[0].url}`}
+                        fileUrl={`${process.env.NEXT_PUBLIC_STRAPI_URL}${data.DownloadsPdf[0].url}`}
                       />
                     )}
                   </div>
@@ -298,7 +298,7 @@ export default function AdmissionPage() {
                     {data?.DownloadsPdf?.[0] && (
                       <FilePreview
                         fileName={data.DownloadsPdf[0].name || 'Brochure'}
-                        fileUrl={`${process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'}${data.DownloadsPdf[0].url}`}
+                        fileUrl={`${process.env.NEXT_PUBLIC_STRAPI_URL}${data.DownloadsPdf[0].url}`}
                       />
                     )}
                   </div>

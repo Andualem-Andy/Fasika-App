@@ -126,7 +126,7 @@ export const useHeroStore = create<HeroStore>((set) => ({
     set({ loading: true, error: null });
 
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/hero-sections?populate=*`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/hero-sections?populate=*`;
       const res = await fetch(apiUrl);
 
       if (!res.ok) {

@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState, MouseEvent } from "react";
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:1337";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function TestimonialsSection() {
   const { heroes, loading, error, fetchHeroes } = useHeroStore();

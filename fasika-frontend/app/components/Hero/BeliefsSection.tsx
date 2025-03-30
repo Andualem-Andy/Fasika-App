@@ -5,7 +5,7 @@ import { useHeroStore } from "@/app/stores/heroStore";
 import Image from "next/image";
 import { PageSkeleton } from "@/app/components/skeletons/page-skeleton";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:1337";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function BeliefsSection() {
   const { heroes, loading, error, fetchHeroes } = useHeroStore();

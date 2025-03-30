@@ -17,7 +17,7 @@ import * as z from "zod";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:1337";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 const DEFAULT_CONTACT_EMAIL = process.env.NEXT_PUBLIC_DEFAULT_CONTACT_EMAIL || "info@example.com";
 const DEFAULT_CONTACT_PHONE = process.env.NEXT_PUBLIC_DEFAULT_CONTACT_PHONE || "+251 912625381";
 

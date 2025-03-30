@@ -38,7 +38,7 @@ export const useNavbarStore = create<NavbarStore>((set) => ({
 
   fetchNavbar: async () => {
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/global?populate[topnav][populate][logoLink][populate][image]=true&populate[topnav][populate][link]=true&populate[topnav][populate][cta]=true`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/global?populate[topnav][populate][logoLink][populate][image]=true&populate[topnav][populate][link]=true&populate[topnav][populate][cta]=true`;
       const res = await fetch(apiUrl);
 
       if (!res.ok) {

@@ -6,7 +6,7 @@ import { PageSkeleton } from '@/app/components/skeletons/page-skeleton';
 import Image from 'next/image';
 
 // Use environment variable for base URL
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:1337";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function HeroSection() {
   const { heroes, fetchHeroes, loading, error } = useHeroStore();

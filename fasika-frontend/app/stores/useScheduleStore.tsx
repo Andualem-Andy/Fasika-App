@@ -25,7 +25,7 @@ export const useScheduleStore = create<ScheduleStore>((set) => ({
 
   fetchSchedules: async () => {
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/schedules`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/schedules`;
       const response = await fetch(apiUrl);
 
       if (!response.ok) {

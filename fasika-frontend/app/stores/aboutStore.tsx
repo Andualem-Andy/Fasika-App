@@ -62,7 +62,7 @@ export const useAboutStore = create<AboutStore>((set) => ({
     set({ loading: true, error: null });
 
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/about-pages?populate=*`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/about-pages?populate=*`;
       const res = await fetch(apiUrl);
 
       if (!res.ok) {

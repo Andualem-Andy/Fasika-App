@@ -84,7 +84,7 @@ export const useServiceStore = create<ServiceStore>((set) => ({
     set({ loading: true, error: null });
 
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:1337'}/api/service-pages?populate=*`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/service-pages?populate=*`;
       const response = await fetch(apiUrl, {
         signal: options?.signal,
         headers: {
